@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bloemstraat site mockup</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Albert+Sans:wght@300;400;500&family=Anton&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* Layout idea: warm off-white page with three more neutrals for depth, 20px margins,
+   floating glass pills for the header, menu and filters, pictures edge to edge. */
+/* Your own fonts are used when they are installed on the computer; the Google ones stand in otherwise. */
+@font-face { font-family: "BS Logo"; src: local("Druk Cond Super"), local("DrukCond-Super"), local("Druk Cond Web Super"), local("DrukCondWeb-Super"); }
+@font-face { font-family: "BS Sans"; font-weight: 300; src: local("Surt Light"), local("Surt-Light"), local("Surt Normal Light"), local("Surt-NormalLight"); }
+@font-face { font-family: "BS Sans"; font-weight: 400; src: local("Surt Regular"), local("Surt-Regular"), local("Surt Normal Regular"), local("Surt-NormalRegular"); }
+@font-face { font-family: "BS Sans"; font-weight: 500; src: local("Surt Medium"), local("Surt-Medium"), local("Surt Normal Medium"), local("Surt-NormalMedium"); }
+@font-face { font-family: "BS Mono"; font-weight: 400; src: local("MD IO"), local("MD IO Regular"), local("MDIO-Regular"), local("MD IO 0.5"), local("MDIO0.5-Regular"), local("MD IO 0.4"), local("MDIO0.4-Regular"); }
+:root {
+  color-scheme: light;
+  --paper: #f9f9f4;
+  --stone: #eeeeee;
+  --pill: #e5e5e5;
+  --sand: #f0f0e2;
+  --white: #fffffb;
+  --pic-1: #dcdcd4;
+  --pic-2: #d2d2c9;
+  --pic-3: #e3e3da;
+  --ink: #111110;
+  --quiet: #5e5e59;
+  --dot: rgba(17, 17, 16, 0.32);
+  --logo: "BS Logo", "Anton", "Arial Narrow", Impact, sans-serif;
+  --sans: "BS Sans", "Albert Sans", "Helvetica Neue", Arial, sans-serif;
+  --mono: "BS Mono", "Geist Mono", ui-monospace, Menlo, monospace;
+  --ease: cubic-bezier(0.37, 0, 0.63, 1);
+  --m: 20px;
+  --glass: 0 0 2px rgba(0, 0, 0, 0.2);
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--sans); font-size: 16px; line-height: 1.45; letter-spacing: 0.01em; -webkit-font-smoothing: antialiased; }
+a { color: inherit; text-decoration: none; }
+h1, h2, h3, p, ol, ul, dl, dd { margin: 0; padding: 0; font-weight: 400; }
+ol, ul { list-style: none; }
+button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; letter-spacing: inherit; }
+[hidden] { display: none !important; }
+:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+[tabindex="-1"]:focus { outline: none; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.skip { position: fixed; left: -999px; top: 8px; z-index: 60; background: var(--white); padding: 8px 14px; border-radius: 25px; box-shadow: var(--glass); }
+.skip:focus { left: 8px; }
+.i { width: 16px; height: 16px; flex: none; stroke: currentColor; fill: none; stroke-width: 1.25; }
+.mono { font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; line-height: 1.5; }
+.quiet { color: var(--quiet); }
+
+/* links: no underlines. Text steps in and an arrow arrives. */
+.lk { display: inline-flex; align-items: center; gap: 6px; transition: transform 0.3s var(--ease); }
+.lk .i { opacity: 0; transform: translateX(-8px); transition: opacity 0.3s var(--ease), transform 0.3s var(--ease); }
+.lk:hover, .lk:focus-visible { transform: translateX(6px); }
+.lk:hover .i, .lk:focus-visible .i { opacity: 1; transform: none; }
+.i.ar { width: auto; height: auto; stroke: none; font-family: var(--mono); font-size: 14px; line-height: 1; display: inline-block; }
+.btn { display: inline-flex; align-items: center; height: 32px; padding: 0 16px; border-radius: 100px; background: var(--pill); font-family: var(--mono); font-size: 12px; letter-spacing: 0.02em; white-space: nowrap; transition: background 0.2s, box-shadow 0.2s; }
+.btn .i { width: 0; overflow: hidden; font-size: inherit; opacity: 0; margin-left: 0; transition: width 0.3s var(--ease), opacity 0.3s var(--ease), margin 0.3s var(--ease); }
+.btn:hover, .btn:focus-visible { background: var(--white); box-shadow: var(--glass); }
+.btn:hover .i, .btn:focus-visible .i { width: 1ch; opacity: 1; margin-left: 8px; }
+.btn.big { height: 40px; padding: 0 20px; font-size: 14px; }
+.btn.dark { background: var(--ink); color: var(--paper); }
+.btn.dark:hover, .btn.dark:focus-visible { background: #000; box-shadow: none; }
+
+/* header: logo and links on the left, built like the menu button */
+.switch { position: fixed; top: var(--m); left: var(--m); z-index: 40; display: flex; align-items: center; gap: 8px; }
+.sw-logo { position: relative; flex: none; width: 152px; height: 40px; border-radius: 100px; background: rgba(249, 249, 244, 0.78); -webkit-backdrop-filter: blur(24px) saturate(1.1); backdrop-filter: blur(24px) saturate(1.1); box-shadow: var(--glass); transition: opacity 0.3s var(--ease); }
+.sw-logo svg { position: absolute; left: 20px; top: 11px; width: 112px; height: auto; display: block; }
+.sw-logo svg path { fill: var(--ink); }
+/* on Home the big logo travels into this pill as you scroll, so the pill waits empty and the links wait at the edge */
+body.home .sw-logo { opacity: var(--pill-o, 0); }
+body.home .sw-logo svg { visibility: hidden; }
+body.home .sw-logo:focus-visible { opacity: 1; }
+.mark { position: fixed; left: 0; top: 0; z-index: 41; width: 1200px; height: auto; transform-origin: 0 0; pointer-events: none; display: none; will-change: transform; }
+.mark path { fill: var(--paper); transition: fill 0.3s var(--ease); }
+body.docked .mark path { fill: var(--ink); }
+.js body.home .mark { display: block; }
+.dock { transition: opacity 0.4s var(--ease), transform 0.4s var(--ease); }
+body.home:not(.dock-in) .dock { opacity: 0; transform: translateY(24px); pointer-events: none; }
+body.home:not(.dock-in) .dock > * { pointer-events: none; }
+
+/* menu: the button grows into the panel */
+.menu { position: fixed; top: var(--m); right: var(--m); z-index: 45; width: 112px; height: 40px; }
+.glass { position: absolute; top: 0; right: 0; width: 112px; height: 40px; border-radius: 100px; background: rgba(249, 249, 244, 0.78); -webkit-backdrop-filter: blur(24px) saturate(1.1); backdrop-filter: blur(24px) saturate(1.1); box-shadow: var(--glass); transition: width 0.5s var(--ease), height 0.5s var(--ease), border-radius 0.5s var(--ease); }
+.menu.open .glass { width: min(410px, calc(100vw - 2 * var(--m))); height: var(--h, 440px); border-radius: 12px; background: rgba(249, 249, 244, 0.82); }
+.menu-btn { position: absolute; top: 0; right: 0; width: 112px; height: 40px; display: flex; align-items: center; justify-content: center; gap: 8px; border-radius: 100px; font-family: var(--mono); font-size: 14px; letter-spacing: 0.02em; }
+.menu-btn .when-open { display: none; }
+.menu.open .menu-btn .when-open { display: flex; align-items: center; gap: 8px; }
+.menu.open .menu-btn .when-closed { display: none; }
+.menu-btn .when-closed { display: flex; align-items: center; gap: 8px; }
+.menu-panel { position: absolute; top: 0; right: 0; width: min(410px, calc(100vw - 2 * var(--m))); padding: 80px 40px 36px; opacity: 0; pointer-events: none; transition: opacity 0.2s var(--ease); }
+.menu.open .menu-panel { opacity: 1; pointer-events: auto; transition: opacity 0.35s var(--ease) 0.3s; }
+.menu-list { counter-reset: n; font-size: 24px; line-height: 30px; letter-spacing: 0.015em; }
+.menu-list li { counter-increment: n; }
+.menu-list a { display: flex; transition: opacity 0.2s var(--ease), transform 0.3s var(--ease); }
+.menu-list a::before { content: counter(n); width: 30px; color: var(--quiet); flex: none; }
+.menu-list:hover a, .menu-list:focus-within a { opacity: 0.35; }
+.menu-list a:hover, .menu-list a:focus-visible { opacity: 1; transform: translateX(6px); }
+.menu-list a[aria-current="page"]::before { color: var(--ink); }
+.menu-small { margin-top: 44px; font-size: 12px; line-height: 17px; letter-spacing: 0.04em; max-width: 300px; }
+.menu-small p + p { margin-top: 10px; }
+.menu-small a { transition: opacity 0.2s; }
+.menu-small a:hover { opacity: 0.5; }
+
+/* shared */
+main { min-height: 100vh; }
+.view { animation: arrive 0.45s var(--ease); }
+@keyframes arrive { from { opacity: 0.2; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+.statement { font-size: 20px; line-height: 1.22; font-weight: 500; letter-spacing: 0.005em; text-wrap: balance; }
+.light { font-weight: 300; letter-spacing: -0.005em; line-height: 1.04; text-wrap: balance; }
+.center { text-align: center; }
+.panel { margin: 0 8px; border-radius: 12px; }
+.rv { transition: transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1); }
+.rv.pre { transform: translateY(56px); }
+
+/* home */
+.mark-hero { position: relative; background: var(--ink); height: clamp(360px, 42vw, 640px); }
+.mark-hero .ghost { position: absolute; left: var(--m); right: var(--m); bottom: var(--m); width: calc(100% - 2 * var(--m)); height: auto; display: block; }
+.mark-hero .ghost path { fill: var(--paper); }
+.js .mark-hero .ghost { visibility: hidden; }
+.opening { padding: 120px var(--m); display: flex; flex-direction: column; align-items: center; gap: 32px; }
+.opening .statement { max-width: 1104px; text-align: center; font-size: clamp(26px, 2.8vw, 40px); font-weight: 300; line-height: 1.2; letter-spacing: 0; text-wrap: pretty; }
+.opening .asks { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+.strip { padding: 32px 0; overflow: hidden; }
+.strip-row { overflow: hidden; }
+.strip-track { display: flex; align-items: center; width: max-content; animation: drift 90s linear infinite; animation-delay: -7s; }
+@keyframes drift { to { transform: translateX(-50%); } }
+.strip:hover .strip-track, .strip:focus-within .strip-track { animation-play-state: paused; }
+.ph { position: relative; flex: none; overflow: hidden; background: var(--pic-1); margin-right: 48px; }
+.ph i { position: absolute; inset: 0; background: inherit; transition: transform 1.2s cubic-bezier(0.2, 0.7, 0.2, 1); }
+.ph:hover i { transform: scale(1.04); }
+.ph.p { width: 336px; height: 448px; background: var(--pic-2); }
+.ph.l { width: 560px; height: 376px; }
+.ph.s { width: 448px; height: 300px; background: var(--pic-3); }
+.ph .cap { position: absolute; left: 16px; bottom: 16px; right: 16px; opacity: 0; transform: translateY(6px); transition: opacity 0.35s var(--ease), transform 0.35s var(--ease); }
+.ph:hover .cap { opacity: 1; transform: none; }
+.spot.panel { margin: 0 120px; }
+.spot { background: var(--stone); padding: 64px 32px; display: flex; flex-direction: column; align-items: center; gap: 48px; }
+.spot h2 { font-size: clamp(40px, 5.6vw, 80px); font-weight: 300; line-height: 1.05; letter-spacing: -0.01em; text-align: center; }
+.spot h2 a { display: block; transition: letter-spacing 0.5s var(--ease); }
+.spot-mid { width: 100%; display: grid; grid-template-columns: 1fr 416px 1fr; gap: 48px; align-items: center; }
+.spot .poster { display: block; width: 416px; aspect-ratio: 4 / 5; background: var(--pic-2); transition: transform 0.6s var(--ease); }
+.spot-l, .spot-r { justify-self: center; display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.spot-l li, .spot-r li { display: flex; gap: 12px; }
+.spot .k { color: var(--quiet); }
+.spot:has(.spot-link:hover) .poster, .spot:has(.spot-link:focus-visible) .poster { transform: rotate(-0.8deg) scale(1.02); }
+.spot:has(.spot-link:hover) h2 a { letter-spacing: 0; }
+.row-head { display: flex; align-items: center; justify-content: space-between; padding: 96px var(--m) 24px; }
+.row-head h2 { font-size: 16px; font-weight: 500; }
+.row-head .tools { display: flex; align-items: center; gap: 8px; }
+.round { font-family: var(--mono); font-size: 14px; width: 32px; height: 32px; border-radius: 50%; background: var(--pill); display: inline-flex; align-items: center; justify-content: center; transition: background 0.2s, box-shadow 0.2s, transform 0.3s var(--ease); }
+.round:hover { background: var(--white); box-shadow: var(--glass); }
+.round.next:hover { transform: translateX(3px); } .round.prev:hover { transform: translateX(-3px); }
+
+/* tiles: edge to edge, a dotted line between */
+.tiles { display: grid; grid-template-columns: repeat(4, 1fr); }
+.tiles.row { display: flex; overflow-x: auto; scroll-snap-type: x proximity; scrollbar-width: none; }
+.tiles.row::-webkit-scrollbar { display: none; }
+.tiles.row .tile { flex: 0 0 25%; min-width: 260px; scroll-snap-align: start; }
+.tile { display: flex; flex-direction: column; border-left: 1px dotted var(--dot); border-bottom: 1px dotted var(--dot); margin-left: -1px; padding-bottom: 48px; }
+.tiles:not(.row) .tile:last-child { border-right: 1px dotted var(--dot); }
+.tile-pic { position: relative; aspect-ratio: 4 / 5; overflow: hidden; display: block; }
+.tile-in { position: absolute; inset: 0; background: var(--pic-1); transition: transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1); }
+.tile:nth-child(3n + 2) .tile-in { background: var(--pic-2); } .tile:nth-child(3n) .tile-in { background: var(--pic-3); }
+.tile .lab { position: absolute; top: 14px; left: 10px; right: 10px; text-align: center; }
+.tile .lab b { font-weight: 500; }
+.tile .go { position: absolute; right: 12px; bottom: 12px; width: 30px; height: 30px; border-radius: 50%; background: var(--paper); box-shadow: var(--glass); display: flex; align-items: center; justify-content: center; opacity: 0; transform: translateX(-8px); transition: opacity 0.3s var(--ease), transform 0.3s var(--ease); }
+.tile-words { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 16px 20px 0; text-align: center; transition: transform 0.3s var(--ease); }
+.tile-title { font-size: 24px; line-height: 1.12; letter-spacing: 0; text-wrap: balance; }
+.tile:hover .tile-in, .tile:focus-visible .tile-in { transform: scale(1.05); }
+.tile:hover .go, .tile:focus-visible .go { opacity: 1; transform: none; }
+.tile:hover .tile-words, .tile:focus-visible .tile-words { transform: translateY(-3px); }
+.rv.pre .tile-in { transform: scale(1.14); }
+
+/* questions: label on the left, list on the right */
+.qs { display: grid; grid-template-columns: 460px 1fr; padding: 96px var(--m) 120px; }
+.qs-label { border-top: 1px dotted var(--dot); padding-top: 32px; }
+.qs h2 { font-size: 16px; font-weight: 500; }
+.qs-label p { margin-top: 8px; color: var(--quiet); }
+.qs-label a { transition: color 0.2s; } .qs-label a:hover { color: var(--ink); }
+.qs-list { border-bottom: 1px dotted var(--dot); }
+.q { border-top: 1px dotted var(--dot); transition: background 0.25s; }
+.q:hover, .q:focus-within { background: var(--stone); }
+.q button { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 24px 12px; text-align: left; font-size: 24px; line-height: 1.25; letter-spacing: 0.01em; }
+.q button span { transition: transform 0.3s var(--ease); }
+.q:hover button span, .q button:focus-visible span { transform: translateX(8px); }
+.q .plus { position: relative; width: 16px; height: 16px; flex: none; }
+.q .plus::before, .q .plus::after { content: ""; position: absolute; left: 0; top: 7.5px; width: 16px; height: 1.25px; background: currentColor; transition: transform 0.4s var(--ease); }
+.q .plus::after { transform: rotate(90deg); }
+.q button[aria-expanded="true"] .plus::after { transform: rotate(0deg); }
+.q .a { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.45s var(--ease); }
+.q .a > div { overflow: hidden; visibility: hidden; transition: visibility 0s 0.45s; }
+.q.open .a > div { visibility: visible; transition: visibility 0s; }
+.q .a p { max-width: 640px; padding: 0 12px 24px; font-size: 18px; line-height: 1.4; }
+.q.open .a { grid-template-rows: 1fr; }
+
+/* closing panel: the line on the left, the actions on the right sharing its top and bottom */
+.band.panel { margin: 48px 120px 0; }
+.band { margin-top: 48px; background: var(--sand); padding: 48px 32px; display: flex; justify-content: space-between; align-items: stretch; gap: 40px; }
+.band .line { font-size: clamp(30px, 2.8vw, 40px); font-weight: 500; line-height: 1.2; letter-spacing: -0.005em; }
+.band .side { width: 464px; flex: none; display: flex; flex-direction: column; justify-content: space-between; gap: 8px; }
+.band .pair { display: flex; gap: 8px; flex-wrap: wrap; }
+.btn.paper { background: var(--paper); box-shadow: var(--glass); }
+.btn.paper:hover, .btn.paper:focus-visible { background: var(--white); }
+.band-status { padding: 8px 40px 0; }
+.band-status:empty { padding: 0; }
+.field-pill { display: flex; align-items: center; gap: 8px; width: 100%; height: 48px; padding: 0 8px 0 20px; border-radius: 100px; background: var(--paper); box-shadow: var(--glass); }
+.field-pill input { flex: 1; min-width: 0; border: 0; background: transparent; font: inherit; font-size: 16px; color: var(--ink); outline: none; }
+.field-pill:focus-within { outline: 2px solid var(--ink); outline-offset: 2px; }
+.field-pill input::placeholder { color: var(--quiet); opacity: 1; }
+.send { width: 32px; height: 32px; flex: none; border-radius: 50%; background: var(--ink); color: var(--paper); display: inline-flex; align-items: center; justify-content: center; transition: transform 0.3s var(--ease); }
+.send:hover, .send:focus-visible { transform: translateX(3px); }
+.status { min-height: 1.5em; }
+.foot { padding-top: 64px; }
+.foot-tags { margin-bottom: 48px; padding: 0 var(--m); }
+body.foot-in .dock { opacity: 0; transform: translateY(24px); pointer-events: none; }
+body.foot-in .dock > * { pointer-events: none; }
+.last { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; padding: 24px var(--m); font-size: 12px; letter-spacing: 0.04em; }
+.last .links { display: flex; gap: 16px; }
+.last a { transition: opacity 0.2s; } .last a:hover { opacity: 0.5; }
+
+/* about: a sheet over the page, as on Sapiens */
+.sheet-wrap { position: fixed; inset: 0; z-index: 50; }
+.sheet-bg { position: absolute; inset: 0; background: rgba(17, 17, 16, 0.45); opacity: 0; transition: opacity 0.5s var(--ease); }
+.sheet { position: absolute; top: 0; right: 0; bottom: 0; left: 280px; background: var(--paper); box-shadow: var(--glass); overflow-y: auto; overscroll-behavior: contain; padding: 40px 20px 96px 40px; transform: translateX(100%); transition: transform 0.6s var(--ease); }
+.sheet-wrap.open .sheet-bg { opacity: 1; }
+.sheet-wrap.open .sheet { transform: none; }
+.sheet-close { position: absolute; top: 40px; right: 20px; display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 14px; letter-spacing: 0.02em; opacity: 0; transition: opacity 0.3s var(--ease) 0.3s; }
+.sheet-wrap.open .sheet-close { opacity: 1; }
+.sheet-grid { display: grid; grid-template-columns: 330px minmax(0, 730px); gap: 40px; }
+.sheet-nav { position: sticky; top: 0; height: calc(100vh - 80px); display: flex; flex-direction: column; justify-content: space-between; }
+.sheet-nav .menu-list a { opacity: 0.35; }
+.sheet-nav .menu-list a[aria-current="page"], .sheet-nav .menu-list a:hover, .sheet-nav .menu-list a:focus-visible { opacity: 1; }
+.sheet-nav .menu-list:hover a, .sheet-nav .menu-list:focus-within a { opacity: 0.35; }
+.sheet-nav .menu-list a:hover, .sheet-nav .menu-list a:focus-visible { opacity: 1; transform: translateX(6px); }
+.sheet-body { display: flex; flex-direction: column; gap: 64px; font-size: 24px; line-height: 30px; letter-spacing: 0.015em; }
+.sheet .lab { display: block; margin-bottom: 12px; font-family: var(--mono); font-size: 12px; font-weight: 400; line-height: 1.5; letter-spacing: 0.1em; text-transform: uppercase; }
+.sb-indent { padding-left: 230px; display: flex; flex-direction: column; gap: 30px; }
+.sb-qa { gap: 40px; }
+.sb-lists { display: grid; grid-template-columns: repeat(2, minmax(0, 340px)); gap: 48px; }
+
+/* events */
+.ev-intro { padding: 160px var(--m) 96px; display: flex; flex-direction: column; align-items: center; gap: 32px; text-align: center; }
+.ev-intro h1 { max-width: 700px; font-size: clamp(28px, 2.8vw, 40px); font-weight: 300; line-height: 1.2; text-wrap: balance; }
+.tags { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+.intro2 { display: grid; grid-template-columns: 1fr 1fr; align-items: center; padding: 170px var(--m) 120px; }
+.intro2 > div { justify-self: center; max-width: 330px; text-align: center; }
+.intro2 h1 { font-size: 16px; font-weight: 500; }
+.intro2 .series { color: var(--quiet); font-size: 16px; font-weight: 500; line-height: 1.25; }
+.intro2 .series button { color: var(--quiet); font-weight: 500; transition: color 0.2s; }
+.intro2 .series button:hover, .intro2 .series button[aria-pressed="true"] { color: var(--ink); }
+.intro2 .statement { font-size: 16px; }
+.sortline { display: flex; justify-content: flex-end; padding: 0 var(--m) 10px; }
+.rows { margin: 0 10px 40px; }
+.rows .hd, .rows a { display: grid; grid-template-columns: 150px 1.5fr 1fr 1.25fr; gap: 20px; align-items: baseline; padding: 0 10px; }
+.rows .hd { padding-bottom: 10px; color: var(--quiet); }
+.rows a { padding-top: 17px; padding-bottom: 17px; border-top: 1px dotted var(--dot); transition: background 0.25s; }
+.rows li:last-child a { border-bottom: 1px dotted var(--dot); }
+.rows a:hover, .rows a:focus-visible { background: var(--stone); }
+.rows .ev { font-size: 24px; line-height: 1.12; display: inline-flex; align-items: center; gap: 8px; transition: transform 0.3s var(--ease); }
+.rows .ev .i { opacity: 0; transform: translateX(-8px); transition: opacity 0.3s var(--ease), transform 0.3s var(--ease); }
+.rows a:hover .ev, .rows a:focus-visible .ev { transform: translateX(10px); }
+.rows a:hover .ev .i, .rows a:focus-visible .ev .i { opacity: 1; transform: none; }
+.peek { position: fixed; left: 0; top: 0; z-index: 30; width: 220px; aspect-ratio: 4 / 5; background: var(--pic-2); pointer-events: none; opacity: 0; transform: translate(-999px, -999px); transition: opacity 0.25s var(--ease); display: flex; align-items: flex-start; justify-content: center; padding-top: 12px; text-align: center; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12); }
+.peek.on { opacity: 1; }
+
+/* dock: filters float at the bottom, as glass */
+.dock { position: fixed; left: 10px; right: 10px; bottom: 10px; z-index: 35; display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 58px; padding: 10px; pointer-events: none; }
+.dock > * { pointer-events: auto; }
+.dock.bar { background: rgba(249, 249, 244, 0.92); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); border-radius: 30px; box-shadow: var(--glass); justify-content: space-between; pointer-events: auto; }
+.chipb { display: inline-flex; align-items: center; height: 40px; padding: 0 20px; border-radius: 100px; background: var(--paper); box-shadow: var(--glass); font-family: var(--mono); font-size: 14px; letter-spacing: 0.02em; white-space: nowrap; transition: background 0.2s, color 0.2s, transform 0.3s var(--ease); }
+.chipb:hover { background: var(--white); transform: translateY(-2px); }
+.chipb[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+.dock .group { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; padding: 2px; }
+.dock .group::-webkit-scrollbar { display: none; }
+.seg { display: flex; padding: 3px; gap: 2px; border-radius: 25px; background: var(--pill); }
+.seg button { height: 32px; padding: 0 16px; border-radius: 100px; font-family: var(--mono); font-size: 14px; letter-spacing: 0.02em; color: var(--quiet); transition: color 0.2s, background 0.2s; }
+.seg button[aria-pressed="true"] { background: var(--white); color: var(--ink); box-shadow: var(--glass); }
+.dock .count { padding: 0 12px; white-space: nowrap; }
+
+/* one event */
+.ev-pic { position: relative; height: min(72vh, 700px); background: var(--pic-1); }
+.ev-pic .lab { position: absolute; top: 76px; left: 0; right: 0; text-align: center; }
+.ev-body { display: grid; grid-template-columns: 1.1fr 1fr; gap: 60px; padding: 34px var(--m) 20px; align-items: start; }
+.ev-body h1 { font-size: clamp(34px, 4.4vw, 60px); }
+.ev-body .text { margin-top: 22px; max-width: 520px; display: flex; flex-direction: column; gap: 12px; font-size: 18px; line-height: 1.35; }
+.facts > div { display: grid; grid-template-columns: 130px 1fr; gap: 20px; align-items: baseline; padding: 13px 0; border-top: 1px dotted var(--dot); }
+.facts > div:first-child { border-top: 0; padding-top: 6px; }
+.facts dd { font-size: 20px; line-height: 1.2; }
+.acts { margin-top: 24px; display: flex; flex-direction: column; gap: 10px; align-items: flex-start; }
+
+/* about and get involved */
+.bigtop { padding: 190px var(--m) 110px; display: flex; flex-direction: column; align-items: center; gap: 34px; text-align: center; }
+.bigtop h1 { font-size: clamp(44px, 6.4vw, 92px); max-width: 13em; }
+.bigtop h1.wide { font-size: clamp(46px, 8.6vw, 150px); max-width: none; white-space: nowrap; }
+.bigtop .statement { max-width: 520px; }
+.cols2 { display: grid; grid-template-columns: repeat(2, minmax(0, 400px)); gap: 60px; justify-content: center; padding: 0 var(--m) 120px; font-size: 18px; line-height: 1.35; }
+.people { background: var(--stone); padding: 56px 30px 64px; }
+.people .lead { font-size: clamp(24px, 2.6vw, 34px); line-height: 1.12; max-width: 19em; margin-bottom: 64px; text-wrap: balance; }
+.lists { display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px 20px; }
+.lists h3 { margin-bottom: 14px; color: var(--quiet); }
+.lists li { font-size: 18px; line-height: 1.38; }
+.slab { padding: 56px 30px 40px; display: grid; grid-template-columns: 1.1fr 1fr; gap: 40px; align-items: start; margin-bottom: 10px; scroll-margin-top: 80px; }
+.slab h2 { font-size: clamp(36px, 4.6vw, 64px); }
+.slab .say { display: flex; flex-direction: column; gap: 18px; align-items: flex-start; font-size: 18px; line-height: 1.35; max-width: 520px; justify-self: end; width: 100%; }
+.slab.a { background: var(--stone); } .slab.b { background: var(--sand); } .slab.c { background: var(--pill); }
+.parts { counter-reset: n; margin-top: 36px; font-size: 24px; line-height: 32px; }
+.parts li { counter-increment: n; display: flex; }
+.parts li::before { content: counter(n); width: 30px; color: var(--quiet); flex: none; }
+form.host { width: 100%; display: flex; flex-direction: column; gap: 10px; align-items: flex-start; }
+form.host textarea { width: 100%; min-height: 120px; border: 0; border-radius: 18px; background: var(--paper); box-shadow: var(--glass); padding: 14px 18px; font: inherit; font-size: 15px; color: var(--ink); resize: vertical; }
+form.host textarea::placeholder { color: var(--quiet); opacity: 1; }
+.spacer { height: 110px; }
+
+@media (max-width: 900px) {
+  .tiles { grid-template-columns: repeat(2, 1fr); }
+  .tiles.row .tile { flex-basis: 62%; }
+  .ev-body, .slab, .intro2 { grid-template-columns: 1fr; }
+  .band { flex-direction: column; }
+  .band .side { width: 100%; }
+  .qs { grid-template-columns: 1fr; }
+  .qs h2 { padding: 0 0 16px; }
+  .ph.p { width: 240px; height: 320px; } .ph.l { width: 400px; height: 268px; } .ph.s { width: 320px; height: 214px; }
+  .strip-row { gap: 32px; }
+  .spot-mid { grid-template-columns: 1fr; justify-items: center; gap: 32px; }
+  .spot-mid > a { order: -1; }
+  .spot .poster { width: min(416px, 72vw); }
+  .band .side, .slab .say { justify-self: start; }
+  .intro2 { gap: 40px; padding-top: 130px; padding-bottom: 80px; }
+  .cols2 { grid-template-columns: 1fr; gap: 20px; }
+  .lists { grid-template-columns: repeat(2, 1fr); }
+  .rows .hd { display: none; }
+  .rows a { grid-template-columns: 1fr; gap: 4px; }
+  .peek { display: none; }
+  .dock.bar { flex-wrap: wrap; border-radius: 22px; }
+  .dock .count { display: none; }
+}
+@media (max-width: 560px) {
+  .spot.panel, .band.panel { margin-left: 8px; margin-right: 8px; }
+  .sheet { left: 0; padding: 72px 20px 64px; }
+  .sheet-grid { grid-template-columns: 1fr; }
+  .sheet-nav { display: none; }
+  .sheet-body { font-size: 20px; line-height: 26px; }
+  .sb-indent { padding-left: 0; }
+  .sb-lists { grid-template-columns: 1fr; }
+  .menu { width: 92px; } .glass, .menu-btn { width: 92px; }
+  .tiles { grid-template-columns: 1fr; }
+  .lists { grid-template-columns: 1fr; }
+  .opening { padding: 80px var(--m); }
+  .q button { font-size: 20px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .strip-track { animation: none; }
+  .strip-row { overflow-x: auto; }
+  *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
+  .rv.pre, .rv.pre .tile-in { transform: none; }
+}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="i-arrow" viewBox="0 0 16 16"><path d="M2 8H13.5M9.5 4L13.5 8L9.5 12"/></symbol>
+  <symbol id="i-left" viewBox="0 0 16 16"><path d="M14 8H2.5M6.5 4L2.5 8L6.5 12"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 16 16"><path d="M2 6H14M2 10H14"/></symbol>
+  <symbol id="i-x" viewBox="0 0 16 16"><path d="M3.5 3.5L12.5 12.5M12.5 3.5L3.5 12.5"/></symbol>
+</svg>
+<a class="skip" href="#main">Skip to content</a>
+
+<div class="switch">
+  <a class="sw-logo" href="#home" aria-label="Bloemstraat, home"><svg class="sm" viewBox="0 0 1200 193" width="1200" height="193" aria-hidden="true" focusable="false"><path d="M1139.8 190.585V37.9882H1117.37V1.71695H1200V37.9882H1177.57V190.585H1139.8Z"/><path d="M1007.97 190.585L1026.22 1.71695H1090.28L1108.2 190.585H1072.47L1069.78 160.109H1047.03L1044.67 190.585H1007.97ZM1049.72 129.954H1066.89L1058.62 33.9104H1056.91L1049.72 129.954Z"/><path d="M894.712 190.585L912.955 1.71695H977.02L994.941 190.585H959.207L956.524 160.109H933.774L931.413 190.585H894.712ZM936.457 129.954H953.626L945.363 33.9104H943.646L936.457 129.954Z"/><path d="M788.534 190.585V1.71695H846.482C856.14 1.71695 863.438 3.93472 868.374 8.37027C873.31 12.7343 876.601 18.8868 878.246 26.8279C879.963 34.6974 880.822 43.9619 880.822 54.6215C880.822 64.9234 879.498 73.1507 876.851 79.3032C874.276 85.4557 869.375 89.7124 862.15 92.0733C868.088 93.2895 872.237 96.2584 874.598 100.98C877.03 105.63 878.246 111.675 878.246 119.116V190.585H841.009V116.648C841.009 111.139 839.865 107.741 837.575 106.453C835.358 105.094 831.745 104.414 826.737 104.414V190.585H788.534ZM826.952 71.6841H836.073C841.296 71.6841 843.907 65.9966 843.907 54.6215C843.907 47.2528 843.334 42.4238 842.19 40.1345C841.045 37.8452 838.899 36.7005 835.751 36.7005H826.952V71.6841Z"/><path d="M711.223 190.585V37.9882H688.795V1.71695H771.425V37.9882H748.997V190.585H711.223Z"/><path d="M631.766 192.302C614.524 192.302 602.076 188.01 594.421 179.425C586.838 170.84 583.046 157.176 583.046 138.432V119.974H620.39V143.583C620.39 147.947 621.034 151.381 622.322 153.885C623.681 156.317 626.006 157.533 629.297 157.533C632.731 157.533 635.092 156.532 636.38 154.529C637.739 152.525 638.419 149.235 638.419 144.656C638.419 138.861 637.847 134.032 636.702 130.169C635.557 126.234 633.554 122.514 630.692 119.008C627.902 115.431 624.003 111.282 618.995 106.56L602.04 90.4636C589.377 78.5163 583.046 64.8519 583.046 49.4706C583.046 33.3739 586.766 21.1046 594.206 12.6628C601.718 4.22093 612.557 5.72205e-06 626.722 5.72205e-06C644.035 5.72205e-06 656.304 4.6144 663.53 13.8432C670.827 23.072 674.476 37.094 674.476 55.9093H636.058V42.9246C636.058 40.3491 635.307 38.346 633.804 36.9152C632.374 35.4844 630.406 34.7689 627.902 34.7689C624.898 34.7689 622.68 35.6274 621.249 37.3444C619.89 38.9899 619.21 41.1361 619.21 43.7831C619.21 46.4301 619.925 49.2918 621.356 52.368C622.787 55.4443 625.613 58.9856 629.834 62.9919L651.618 83.9176C655.982 88.067 659.988 92.4668 663.637 97.1169C667.286 101.696 670.219 107.061 672.437 113.214C674.654 119.295 675.763 126.735 675.763 135.534C675.763 153.277 672.472 167.191 665.891 177.279C659.38 187.294 648.005 192.302 631.766 192.302Z"/><path d="M416.342 190.585V1.71695H473.861L489.743 116.862L505.518 1.71695H563.574V190.585H529.019V54.5142L507.342 190.585H473.432L450.467 54.5142V190.585H416.342Z"/><path d="M319.178 190.585V1.71695H394.726V38.2029H357.596V75.0107H393.223V110.531H357.596V153.777H397.194V190.585H319.178Z"/><path d="M250.774 192.302C235.679 192.302 224.125 187.759 216.112 178.674C208.171 169.516 204.201 156.317 204.201 139.076V49.3633C204.201 33.195 208.135 20.9258 216.005 12.5555C223.946 4.18516 235.536 5.72205e-06 250.774 5.72205e-06C266.012 5.72205e-06 277.566 4.18516 285.435 12.5555C293.376 20.9258 297.347 33.195 297.347 49.3633V139.076C297.347 156.317 293.341 169.516 285.328 178.674C277.387 187.759 265.869 192.302 250.774 192.302ZM251.096 157.533C256.819 157.533 259.681 151.989 259.681 140.9V48.7194C259.681 39.4191 256.891 34.7689 251.31 34.7689C245.015 34.7689 241.867 39.5264 241.867 49.0414V141.115C241.867 146.981 242.582 151.202 244.013 153.777C245.444 156.281 247.805 157.533 251.096 157.533Z"/><path d="M111.758 190.585V1.71695H149.532V158.392H188.379V190.585H111.758Z"/><path d="M6.29425e-05 190.585V1.71716H51.1877C64.9235 1.71716 74.9035 5.07959 81.1276 11.8044C87.4232 18.4578 90.571 29.4751 90.571 44.8564V53.1194C90.571 61.9905 88.9613 69.1803 85.742 74.689C82.5942 80.1977 77.7652 83.8105 71.2549 85.5275C79.7683 87.6737 85.4558 92.7173 88.3175 100.658C91.2506 108.528 92.7172 118.15 92.7172 129.525C92.7172 141.759 91.5726 152.454 89.2833 161.611C86.9939 170.769 82.8446 177.887 76.8351 182.966C70.8257 188.046 62.2765 190.585 51.1877 190.585H6.29425e-05ZM36.9152 72.8647H44.6417C48.1472 72.8647 50.4007 71.5054 51.4023 68.7869C52.4039 66.0683 52.9046 62.8132 52.9046 59.0215V40.0274C52.9046 33.9464 50.2219 30.9059 44.8563 30.9059H36.9152V72.8647ZM40.6711 157.319C50.4723 157.319 55.3728 152.669 55.3728 143.368V119.76C55.3728 114.394 54.5501 110.173 52.9046 107.097C51.3307 103.949 48.326 102.375 43.8905 102.375H36.9152V157.104C38.4891 157.247 39.7411 157.319 40.6711 157.319Z"/></svg></a>
+</div>
+
+<div class="menu" id="menu">
+  <div class="glass" aria-hidden="true"></div>
+  <nav class="menu-panel" id="menu-panel" aria-label="Menu" hidden>
+    <ol class="menu-list">
+      <li><a href="#events" data-nav="events">Events</a></li>
+      <li><a href="#get-involved" data-nav="get-involved">Get involved</a></li>
+      <li><a href="#host">Host an event</a></li>
+      <li><a href="#support">Support us</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="https://www.instagram.com/bloemstraat/">Instagram</a></li>
+    </ol>
+    <div class="menu-small">
+      <p>Bloemstraat makes small, open events about freedom, resistance and liberation. Amsterdam, since 2020.</p>
+      <p><a href="#about">Privacy policy</a>, <a href="#about">Terms of use</a></p>
+    </div>
+  </nav>
+  <button class="menu-btn" id="menu-btn" type="button" aria-expanded="false" aria-controls="menu-panel">
+    <span class="when-closed"><svg class="i" aria-hidden="true"><use href="#i-menu"/></svg>Menu</span>
+    <span class="when-open"><svg class="i" aria-hidden="true"><use href="#i-x"/></svg>Close</span>
+  </button>
+</div>
+
+<svg class="mark" viewBox="0 0 1200 193" width="1200" height="193" aria-hidden="true" focusable="false" id="mark"><path d="M1139.8 190.585V37.9882H1117.37V1.71695H1200V37.9882H1177.57V190.585H1139.8Z"/><path d="M1007.97 190.585L1026.22 1.71695H1090.28L1108.2 190.585H1072.47L1069.78 160.109H1047.03L1044.67 190.585H1007.97ZM1049.72 129.954H1066.89L1058.62 33.9104H1056.91L1049.72 129.954Z"/><path d="M894.712 190.585L912.955 1.71695H977.02L994.941 190.585H959.207L956.524 160.109H933.774L931.413 190.585H894.712ZM936.457 129.954H953.626L945.363 33.9104H943.646L936.457 129.954Z"/><path d="M788.534 190.585V1.71695H846.482C856.14 1.71695 863.438 3.93472 868.374 8.37027C873.31 12.7343 876.601 18.8868 878.246 26.8279C879.963 34.6974 880.822 43.9619 880.822 54.6215C880.822 64.9234 879.498 73.1507 876.851 79.3032C874.276 85.4557 869.375 89.7124 862.15 92.0733C868.088 93.2895 872.237 96.2584 874.598 100.98C877.03 105.63 878.246 111.675 878.246 119.116V190.585H841.009V116.648C841.009 111.139 839.865 107.741 837.575 106.453C835.358 105.094 831.745 104.414 826.737 104.414V190.585H788.534ZM826.952 71.6841H836.073C841.296 71.6841 843.907 65.9966 843.907 54.6215C843.907 47.2528 843.334 42.4238 842.19 40.1345C841.045 37.8452 838.899 36.7005 835.751 36.7005H826.952V71.6841Z"/><path d="M711.223 190.585V37.9882H688.795V1.71695H771.425V37.9882H748.997V190.585H711.223Z"/><path d="M631.766 192.302C614.524 192.302 602.076 188.01 594.421 179.425C586.838 170.84 583.046 157.176 583.046 138.432V119.974H620.39V143.583C620.39 147.947 621.034 151.381 622.322 153.885C623.681 156.317 626.006 157.533 629.297 157.533C632.731 157.533 635.092 156.532 636.38 154.529C637.739 152.525 638.419 149.235 638.419 144.656C638.419 138.861 637.847 134.032 636.702 130.169C635.557 126.234 633.554 122.514 630.692 119.008C627.902 115.431 624.003 111.282 618.995 106.56L602.04 90.4636C589.377 78.5163 583.046 64.8519 583.046 49.4706C583.046 33.3739 586.766 21.1046 594.206 12.6628C601.718 4.22093 612.557 5.72205e-06 626.722 5.72205e-06C644.035 5.72205e-06 656.304 4.6144 663.53 13.8432C670.827 23.072 674.476 37.094 674.476 55.9093H636.058V42.9246C636.058 40.3491 635.307 38.346 633.804 36.9152C632.374 35.4844 630.406 34.7689 627.902 34.7689C624.898 34.7689 622.68 35.6274 621.249 37.3444C619.89 38.9899 619.21 41.1361 619.21 43.7831C619.21 46.4301 619.925 49.2918 621.356 52.368C622.787 55.4443 625.613 58.9856 629.834 62.9919L651.618 83.9176C655.982 88.067 659.988 92.4668 663.637 97.1169C667.286 101.696 670.219 107.061 672.437 113.214C674.654 119.295 675.763 126.735 675.763 135.534C675.763 153.277 672.472 167.191 665.891 177.279C659.38 187.294 648.005 192.302 631.766 192.302Z"/><path d="M416.342 190.585V1.71695H473.861L489.743 116.862L505.518 1.71695H563.574V190.585H529.019V54.5142L507.342 190.585H473.432L450.467 54.5142V190.585H416.342Z"/><path d="M319.178 190.585V1.71695H394.726V38.2029H357.596V75.0107H393.223V110.531H357.596V153.777H397.194V190.585H319.178Z"/><path d="M250.774 192.302C235.679 192.302 224.125 187.759 216.112 178.674C208.171 169.516 204.201 156.317 204.201 139.076V49.3633C204.201 33.195 208.135 20.9258 216.005 12.5555C223.946 4.18516 235.536 5.72205e-06 250.774 5.72205e-06C266.012 5.72205e-06 277.566 4.18516 285.435 12.5555C293.376 20.9258 297.347 33.195 297.347 49.3633V139.076C297.347 156.317 293.341 169.516 285.328 178.674C277.387 187.759 265.869 192.302 250.774 192.302ZM251.096 157.533C256.819 157.533 259.681 151.989 259.681 140.9V48.7194C259.681 39.4191 256.891 34.7689 251.31 34.7689C245.015 34.7689 241.867 39.5264 241.867 49.0414V141.115C241.867 146.981 242.582 151.202 244.013 153.777C245.444 156.281 247.805 157.533 251.096 157.533Z"/><path d="M111.758 190.585V1.71695H149.532V158.392H188.379V190.585H111.758Z"/><path d="M6.29425e-05 190.585V1.71716H51.1877C64.9235 1.71716 74.9035 5.07959 81.1276 11.8044C87.4232 18.4578 90.571 29.4751 90.571 44.8564V53.1194C90.571 61.9905 88.9613 69.1803 85.742 74.689C82.5942 80.1977 77.7652 83.8105 71.2549 85.5275C79.7683 87.6737 85.4558 92.7173 88.3175 100.658C91.2506 108.528 92.7172 118.15 92.7172 129.525C92.7172 141.759 91.5726 152.454 89.2833 161.611C86.9939 170.769 82.8446 177.887 76.8351 182.966C70.8257 188.046 62.2765 190.585 51.1877 190.585H6.29425e-05ZM36.9152 72.8647H44.6417C48.1472 72.8647 50.4007 71.5054 51.4023 68.7869C52.4039 66.0683 52.9046 62.8132 52.9046 59.0215V40.0274C52.9046 33.9464 50.2219 30.9059 44.8563 30.9059H36.9152V72.8647ZM40.6711 157.319C50.4723 157.319 55.3728 152.669 55.3728 143.368V119.76C55.3728 114.394 54.5501 110.173 52.9046 107.097C51.3307 103.949 48.326 102.375 43.8905 102.375H36.9152V157.104C38.4891 157.247 39.7411 157.319 40.6711 157.319Z"/></svg>
+
+<main id="main">
+
+<!-- HOME -->
+<div class="view" id="view-home">
+  <h1 class="sr" id="home-h" tabindex="-1">Bloemstraat</h1>
+  <div class="mark-hero" id="mark-hero"><svg class="ghost" viewBox="0 0 1200 193" width="1200" height="193" aria-hidden="true" focusable="false"><path d="M1139.8 190.585V37.9882H1117.37V1.71695H1200V37.9882H1177.57V190.585H1139.8Z"/><path d="M1007.97 190.585L1026.22 1.71695H1090.28L1108.2 190.585H1072.47L1069.78 160.109H1047.03L1044.67 190.585H1007.97ZM1049.72 129.954H1066.89L1058.62 33.9104H1056.91L1049.72 129.954Z"/><path d="M894.712 190.585L912.955 1.71695H977.02L994.941 190.585H959.207L956.524 160.109H933.774L931.413 190.585H894.712ZM936.457 129.954H953.626L945.363 33.9104H943.646L936.457 129.954Z"/><path d="M788.534 190.585V1.71695H846.482C856.14 1.71695 863.438 3.93472 868.374 8.37027C873.31 12.7343 876.601 18.8868 878.246 26.8279C879.963 34.6974 880.822 43.9619 880.822 54.6215C880.822 64.9234 879.498 73.1507 876.851 79.3032C874.276 85.4557 869.375 89.7124 862.15 92.0733C868.088 93.2895 872.237 96.2584 874.598 100.98C877.03 105.63 878.246 111.675 878.246 119.116V190.585H841.009V116.648C841.009 111.139 839.865 107.741 837.575 106.453C835.358 105.094 831.745 104.414 826.737 104.414V190.585H788.534ZM826.952 71.6841H836.073C841.296 71.6841 843.907 65.9966 843.907 54.6215C843.907 47.2528 843.334 42.4238 842.19 40.1345C841.045 37.8452 838.899 36.7005 835.751 36.7005H826.952V71.6841Z"/><path d="M711.223 190.585V37.9882H688.795V1.71695H771.425V37.9882H748.997V190.585H711.223Z"/><path d="M631.766 192.302C614.524 192.302 602.076 188.01 594.421 179.425C586.838 170.84 583.046 157.176 583.046 138.432V119.974H620.39V143.583C620.39 147.947 621.034 151.381 622.322 153.885C623.681 156.317 626.006 157.533 629.297 157.533C632.731 157.533 635.092 156.532 636.38 154.529C637.739 152.525 638.419 149.235 638.419 144.656C638.419 138.861 637.847 134.032 636.702 130.169C635.557 126.234 633.554 122.514 630.692 119.008C627.902 115.431 624.003 111.282 618.995 106.56L602.04 90.4636C589.377 78.5163 583.046 64.8519 583.046 49.4706C583.046 33.3739 586.766 21.1046 594.206 12.6628C601.718 4.22093 612.557 5.72205e-06 626.722 5.72205e-06C644.035 5.72205e-06 656.304 4.6144 663.53 13.8432C670.827 23.072 674.476 37.094 674.476 55.9093H636.058V42.9246C636.058 40.3491 635.307 38.346 633.804 36.9152C632.374 35.4844 630.406 34.7689 627.902 34.7689C624.898 34.7689 622.68 35.6274 621.249 37.3444C619.89 38.9899 619.21 41.1361 619.21 43.7831C619.21 46.4301 619.925 49.2918 621.356 52.368C622.787 55.4443 625.613 58.9856 629.834 62.9919L651.618 83.9176C655.982 88.067 659.988 92.4668 663.637 97.1169C667.286 101.696 670.219 107.061 672.437 113.214C674.654 119.295 675.763 126.735 675.763 135.534C675.763 153.277 672.472 167.191 665.891 177.279C659.38 187.294 648.005 192.302 631.766 192.302Z"/><path d="M416.342 190.585V1.71695H473.861L489.743 116.862L505.518 1.71695H563.574V190.585H529.019V54.5142L507.342 190.585H473.432L450.467 54.5142V190.585H416.342Z"/><path d="M319.178 190.585V1.71695H394.726V38.2029H357.596V75.0107H393.223V110.531H357.596V153.777H397.194V190.585H319.178Z"/><path d="M250.774 192.302C235.679 192.302 224.125 187.759 216.112 178.674C208.171 169.516 204.201 156.317 204.201 139.076V49.3633C204.201 33.195 208.135 20.9258 216.005 12.5555C223.946 4.18516 235.536 5.72205e-06 250.774 5.72205e-06C266.012 5.72205e-06 277.566 4.18516 285.435 12.5555C293.376 20.9258 297.347 33.195 297.347 49.3633V139.076C297.347 156.317 293.341 169.516 285.328 178.674C277.387 187.759 265.869 192.302 250.774 192.302ZM251.096 157.533C256.819 157.533 259.681 151.989 259.681 140.9V48.7194C259.681 39.4191 256.891 34.7689 251.31 34.7689C245.015 34.7689 241.867 39.5264 241.867 49.0414V141.115C241.867 146.981 242.582 151.202 244.013 153.777C245.444 156.281 247.805 157.533 251.096 157.533Z"/><path d="M111.758 190.585V1.71695H149.532V158.392H188.379V190.585H111.758Z"/><path d="M6.29425e-05 190.585V1.71716H51.1877C64.9235 1.71716 74.9035 5.07959 81.1276 11.8044C87.4232 18.4578 90.571 29.4751 90.571 44.8564V53.1194C90.571 61.9905 88.9613 69.1803 85.742 74.689C82.5942 80.1977 77.7652 83.8105 71.2549 85.5275C79.7683 87.6737 85.4558 92.7173 88.3175 100.658C91.2506 108.528 92.7172 118.15 92.7172 129.525C92.7172 141.759 91.5726 152.454 89.2833 161.611C86.9939 170.769 82.8446 177.887 76.8351 182.966C70.8257 188.046 62.2765 190.585 51.1877 190.585H6.29425e-05ZM36.9152 72.8647H44.6417C48.1472 72.8647 50.4007 71.5054 51.4023 68.7869C52.4039 66.0683 52.9046 62.8132 52.9046 59.0215V40.0274C52.9046 33.9464 50.2219 30.9059 44.8563 30.9059H36.9152V72.8647ZM40.6711 157.319C50.4723 157.319 55.3728 152.669 55.3728 143.368V119.76C55.3728 114.394 54.5501 110.173 52.9046 107.097C51.3307 103.949 48.326 102.375 43.8905 102.375H36.9152V157.104C38.4891 157.247 39.7411 157.319 40.6711 157.319Z"/></svg></div>
+
+  <div class="opening">
+    <p class="statement">Bloemstraat is committed to freedom, resistance and liberation. We make small, open events in Amsterdam where anyone can walk in, learn something and back a cause.</p>
+    <p class="asks">
+      <a class="btn" href="#events">Come to an event<span class="i ar" aria-hidden="true">→</span></a>
+      <a class="btn" href="#host">Host an event<span class="i ar" aria-hidden="true">→</span></a>
+      <a class="btn" href="#support">Support us<span class="i ar" aria-hidden="true">→</span></a>
+    </p>
+  </div>
+
+  <section class="strip" aria-label="Pictures from past events">
+    <div class="strip-row" id="strip" tabindex="0" role="region" aria-label="Pictures from past events. Hover or focus to pause.">
+      <div class="strip-track"><figure class="ph p"><i></i><figcaption class="cap mono">Open Table / 18 Apr 2026</figcaption></figure><figure class="ph l"><i></i><figcaption class="cap mono">Ireland: Let the People Sing / 14 Mar 2025</figcaption></figure><figure class="ph p"><i></i><figcaption class="cap mono">No Pride in Genocide / 6 Jun 2025</figcaption></figure><figure class="ph s"><i></i><figcaption class="cap mono">Pub Quiz / 26 Mar 2025</figcaption></figure><figure class="ph p"><i></i><figcaption class="cap mono">Pub Quiz #2 / 30 Jul 2025</figcaption></figure><figure class="ph l"><i></i><figcaption class="cap mono">RepresentAsian × Bloemstraat / 7 Dec 2025</figcaption></figure><figure class="ph p" aria-hidden="true"><i></i><figcaption class="cap mono">Open Table / 18 Apr 2026</figcaption></figure><figure class="ph l" aria-hidden="true"><i></i><figcaption class="cap mono">Ireland: Let the People Sing / 14 Mar 2025</figcaption></figure><figure class="ph p" aria-hidden="true"><i></i><figcaption class="cap mono">No Pride in Genocide / 6 Jun 2025</figcaption></figure><figure class="ph s" aria-hidden="true"><i></i><figcaption class="cap mono">Pub Quiz / 26 Mar 2025</figcaption></figure><figure class="ph p" aria-hidden="true"><i></i><figcaption class="cap mono">Pub Quiz #2 / 30 Jul 2025</figcaption></figure><figure class="ph l" aria-hidden="true"><i></i><figcaption class="cap mono">RepresentAsian × Bloemstraat / 7 Dec 2025</figcaption></figure></div>
+    </div>
+  </section>
+
+  <section class="spot panel rv" aria-labelledby="h-spot">
+    <h2 id="h-spot"><a class="spot-link" href="#liberatory-sounds">Liberatory Sounds</a></h2>
+    <div class="spot-mid">
+      <ul class="spot-l mono" aria-label="Details">
+        <li><span class="k">When</span>Sat 21 Nov 2026</li>
+        <li><span class="k">Where</span>dubble, Amsterdam</li>
+        <li><span class="k">Time</span>12:00–17:00</li>
+        <li><span class="k">Entry</span>Free, no ticket needed</li>
+      </ul>
+      <a class="spot-link" href="#liberatory-sounds" tabindex="-1" aria-hidden="true"><span class="poster"></span></a>
+      <ol class="spot-r mono" aria-label="Who is playing">
+        <li><span class="k">12:00</span>Fiona Kirk</li>
+        <li><span class="k">13:00</span>Cathy Grogan</li>
+        <li><span class="k">14:00</span>Deboleena</li>
+        <li><span class="k">15:00</span>Mo Rights</li>
+        <li><span class="k">16:00</span>Karmel Sabri</li>
+      </ol>
+    </div>
+    <a class="btn big dark" href="#liberatory-sounds">About this event<span class="i ar" aria-hidden="true">→</span></a>
+  </section>
+
+  <section aria-labelledby="h-past">
+    <div class="row-head"><h2 id="h-past">Past events</h2>
+      <div class="tools"><a class="btn" href="#events">See them all<span class="i ar" aria-hidden="true">→</span></a><button class="round prev" type="button" id="past-prev" aria-label="Scroll back"><span class="i ar" aria-hidden="true">←</span></button><button class="round next" type="button" id="past-next" aria-label="Scroll on"><span class="i ar" aria-hidden="true">→</span></button></div>
+    </div>
+    <div class="tiles row rv" id="past" tabindex="0" role="region" aria-label="Past events, scroll sideways"></div>
+  </section>
+
+  <section class="band panel rv" aria-labelledby="h-band">
+    <p class="line" id="h-band">Got an event in mind?<br>Bring it to us.</p>
+    <div class="side">
+      <p class="pair"><a class="btn big dark" href="#host">Host an event<span class="i ar" aria-hidden="true">→</span></a><a class="btn big paper" href="#support">Support us<span class="i ar" aria-hidden="true">→</span></a></p>
+      <form class="field-pill" id="signup" novalidate>
+        <label class="sr" for="signup-email">Your email, to hear about the next event</label>
+        <input id="signup-email" type="email" autocomplete="email" placeholder="Your email, to hear about the next event">
+        <button class="send" type="submit" aria-label="Sign up"><span class="i ar" aria-hidden="true">→</span></button>
+      </form>
+    </div>
+  </section>
+  <p class="status mono quiet band-status" id="signup-status" role="status"></p>
+
+  <section class="qs" aria-labelledby="h-q">
+    <div class="qs-label"><h2 id="h-q">Questions</h2><p>Something else? <a href="https://www.instagram.com/bloemstraat/">Message us on Instagram.</a></p></div>
+    <div class="qs-list" id="questions"></div>
+  </section>
+</div>
+
+<!-- EVENTS -->
+<div class="view" id="view-events" hidden>
+  <div class="ev-intro">
+    <h1 id="events-h" tabindex="-1">Every event so far, from film, music and food to talks and quizzes.</h1>
+    <div class="tags" id="series-links" role="group" aria-label="Show one series"></div>
+  </div>
+  <p class="sortline mono quiet" id="events-count" role="status"></p>
+  <div class="tiles" id="events-grid"></div>
+  <div class="rows" id="events-list" hidden>
+    <div class="hd mono" aria-hidden="true"><span>Date</span><span>Event</span><span>Series</span><span>In support of</span></div>
+    <ol id="events-rows"></ol>
+  </div>
+  <div class="spacer"></div>
+</div>
+
+<!-- ONE EVENT -->
+<div class="view" id="view-event" hidden>
+  <div class="ev-pic" role="img" aria-label="Picture to come"><span class="lab mono" id="ev-lab"></span></div>
+  <div class="ev-body">
+    <div>
+      <h1 class="light" id="ev-title" tabindex="-1"></h1>
+      <div class="text" id="ev-text"></div>
+      <div class="acts"><button class="btn big dark" type="button" id="ev-cal">Add to calendar<span class="i ar" aria-hidden="true">→</span></button><p class="status mono quiet" id="ev-status" role="status"></p></div>
+    </div>
+    <dl class="facts" id="ev-rows"></dl>
+  </div>
+  <section aria-labelledby="h-more">
+    <div class="row-head"><h2 id="h-more">More events</h2><div class="tools"><a class="btn" href="#events">See them all<span class="i ar" aria-hidden="true">→</span></a></div></div>
+    <div class="tiles row" id="more" tabindex="0" role="region" aria-label="More events, scroll sideways"></div>
+  </section>
+</div>
+
+</main>
+
+<footer class="foot" id="foot">
+  <div class="tags foot-tags" id="foot-tags" role="group" aria-label="Events by series"></div>
+  <div class="last">
+    <span>Bloemstraat, Amsterdam, since 2020</span>
+    <span class="links"><a href="#about">Privacy policy</a><a href="#about">Terms of use</a><a href="https://www.instagram.com/bloemstraat/">Instagram</a></span>
+  </div>
+</footer>
+
+
+<div class="sheet-wrap" id="about-sheet" hidden>
+  <a class="sheet-bg" href="#home" data-close tabindex="-1" aria-hidden="true"></a>
+  <section class="sheet" role="dialog" aria-modal="true" aria-labelledby="about-h">
+    <div class="sheet-grid">
+      <nav class="sheet-nav" aria-label="Menu">
+        <ol class="menu-list">
+          <li><a href="#events">Events</a></li>
+          <li><a href="#get-involved">Get involved</a></li>
+          <li><a href="#host">Host an event</a></li>
+          <li><a href="#support">Support us</a></li>
+          <li><a href="#about" aria-current="page">About</a></li>
+          <li><a href="https://www.instagram.com/bloemstraat/">Instagram</a></li>
+        </ol>
+        <div class="menu-small">
+          <p>Bloemstraat makes small, open events about freedom, resistance and liberation. Amsterdam, since 2020.</p>
+          <p><a href="#about">Privacy policy</a>, <a href="#about">Terms of use</a></p>
+        </div>
+      </nav>
+      <div class="sheet-body">
+        <div><h1 class="lab" id="about-h" tabindex="-1">About Bloemstraat</h1><p>Bloemstraat is committed to freedom, resistance and liberation. We make small, open events in Amsterdam where anyone can walk in, learn something and back a cause.</p></div>
+        <div class="sb-indent"><p>It began in August 2020, when friends in Amsterdam raffled off each other’s work to raise money for Beirut after the port explosion.</p><p>Since 2024 it has put on film screenings, listening sessions, dinners, markets and quizzes, in four series. The events are small on purpose.</p></div>
+        <dl class="sb-indent sb-qa">
+          <div><dt class="lab">Who it’s for:</dt><dd>Anyone. Most events are pay what you can, and you don’t need to know the subject before you arrive.</dd></div>
+          <div><dt class="lab">Where the money goes:</dt><dd>Most events raise money for a group working on the cause the event is about. Each event names the group.</dd></div>
+          <div><dt class="lab">How to take part:</dt><dd>Come to an event, bring one of your own, or help pay for one.</dd></div>
+        </dl>
+        <div><h2 class="lab">The community</h2><p>What matters most about Bloemstraat is the community. We couldn’t do this work without these people.</p></div>
+        <div class="sb-lists">
+          <div><h3 class="lab">Venues</h3><ul><li>Ventilator Cinema</li><li>OT301</li><li>Café Saarein</li><li>Filmhuis Cavia</li><li>Murmur</li><li>Radio Radio</li><li>dubble</li></ul></div>
+          <div><h3 class="lab">Collectives</h3><ul><li>Queer Cinema for Palestine</li><li>BDS Nederland</li><li>Free Palestine NL</li><li>RepresentAsian</li><li>Asian Pride NL</li><li>LibRafi</li><li>Rasa Amsterdam</li><li>Palestina Coalitie</li></ul></div>
+          <div><h3 class="lab">In support of</h3><ul><li>Haven for Artists</li><li>Funds for Gaza</li><li>alQaws</li><li>Mayli Library</li><li>The Great Oven</li><li>Cairde Palestine Belfast</li><li>Palestine Action</li><li>We Are Queer gym</li><li>De Regenboog Groep</li><li>TechMed Gaza</li><li>Saida Initiative</li></ul></div>
+          <div><h3 class="lab">Collaborators and facilitators</h3><ul><li>Fiona Kirk</li><li>Leah Downing</li><li>Eric Stynes</li><li>Louise Lap</li></ul></div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <a class="sheet-close" href="#home" data-close><svg class="i" aria-hidden="true"><use href="#i-x"/></svg>Close</a>
+</div>
+
+<div class="dock" id="dock"></div>
+<div class="peek" id="peek" aria-hidden="true"><span class="mono" id="peek-lab"></span></div>
+
+<script>
+(function () {
+  document.documentElement.classList.add('js');
+  var EVENTS = [
+    { slug: 'liberatory-sounds', date: '21 Nov 2026', title: 'Liberatory Sounds', series: 'Liberatory Sounds', support: 'Free event', line: 'Free, with LibRafi’s library', when: 'Sat 21 Nov 2026, 12:00–17:00', where: 'dubble, Amsterdam', door: 'Free, no ticket needed', withWho: 'LibRafi and dubble',
+      text: ['Five music lovers play what liberation means to them. Drop in for an hour or stay the whole afternoon.', 'Reflect, chat and browse books from LibRafi’s decolonial nomadic library.'],
+      lineup: [['12:00', 'Fiona Kirk'], ['13:00', 'Cathy Grogan'], ['14:00', 'Deboleena'], ['15:00', 'Mo Rights'], ['16:00', 'Karmel Sabri']] },
+    { slug: 'a-listening-journey', date: '8 Oct 2026', title: 'A Listening Journey', series: 'Bloemstraat presents', support: 'To confirm', line: 'In support of: to confirm', where: 'Radio Radio, Amsterdam', text: ['A lecture, a listening session and a DJ set with Hiba Salameh, tracing Palestinian music from the 1920s to now.'] },
+    { slug: 'open-table', date: '18 Apr 2026', title: 'Open Table', series: 'Bloemstraat presents', support: 'Saida Initiative', line: 'In support of Saida Initiative', where: 'OT301 and Ventilator Cinema, Amsterdam', text: ['A screening of Buffer Zone, a mezze dinner and a market.'] },
+    { slug: 'the-things-we-dont-say', date: '4 Feb 2026', title: 'The Things We Don’t Say and Rendered in Light', series: 'Bloemstraat presents', support: 'TechMed Gaza', line: 'In support of TechMed Gaza', where: 'Ventilator Cinema, Amsterdam', text: ['Two short films, and a Q&A with directors Ornella Mutoni and Maria Marrone.'] },
+    { slug: 'representasian', date: '7 Dec 2025', title: 'RepresentAsian × Bloemstraat', series: 'Bloemstraat with…', support: 'De Regenboog Groep', line: 'In support of De Regenboog Groep', where: 'Murmur, Amsterdam', text: ['Short films, a panel, food and music, with RepresentAsian and Asian Pride NL.'] },
+    { slug: 'pub-quiz-2', date: '30 Jul 2025', title: 'Pub Quiz #2', series: 'Bloemstraat presents', support: 'LGBT asylum support', line: 'Fundraiser for LGBT asylum support', where: 'Café Saarein, Amsterdam', text: ['A queer-themed pub quiz. Pay what you can.'] },
+    { slug: 'no-pride-in-genocide', date: '6 Jun 2025', title: 'No Pride in Genocide', series: 'Liberatory Visions', support: 'The filmmakers', line: 'In support of the filmmakers', where: 'Ventilator Cinema, Amsterdam', text: ['Short films by queer, Palestinian and allied artists, with Queer Cinema for Palestine.'] },
+    { slug: 'pub-quiz', date: '26 Mar 2025', title: 'Pub Quiz', series: 'Bloemstraat presents', support: 'We Are Queer gym', line: 'In support of We Are Queer gym', where: 'Café Saarein, Amsterdam', text: ['A queer-themed pub quiz. Pay what you can.'] },
+    { slug: 'ireland-let-the-people-sing', date: '14 Mar 2025', title: 'Ireland: Let the People Sing', series: 'Liberatory Visions', support: 'Cairde Palestine Belfast and Palestine Action', line: 'In support of Cairde Palestine Belfast and Palestine Action', where: 'Ventilator Cinema, Amsterdam', text: ['A screening of The Ban, a talk on media and censorship, Irish music and an art market.'] },
+    { slug: 'lebanon-a-piece-of-sky', date: '17 Jan 2025', title: 'Lebanon, A Piece of Sky', series: 'Liberatory Visions', support: 'Mayli Library and The Great Oven', line: 'In support of Mayli Library and The Great Oven', where: 'Ventilator Cinema, Amsterdam', text: ['Two films by Lebanese filmmakers that look to the skies above Beirut.'] },
+    { slug: 'queer-voices', date: '25 Sep 2024', title: 'Queer Voices for a Liberated Palestine', series: 'Liberatory Visions', support: 'alQaws', line: 'In support of alQaws', where: 'Ventilator Cinema, Amsterdam', text: ['Five short films by queer filmmakers from Palestine and Lebanon.'] },
+    { slug: 'where-olive-trees-weep', date: '26 Jun 2024', title: 'Where Olive Trees Weep', series: 'Bloemstraat presents', support: 'To confirm', line: 'In support of: to confirm', where: 'Filmhuis Cavia, Amsterdam', text: ['A solidarity screening of the documentary Where Olive Trees Weep.'] },
+    { slug: 'united-by-music', date: '11 May 2024', title: 'United by Music (for a Free Palestine)', series: 'Bloemstraat presents', support: 'Funds for Gaza', line: 'In support of Funds for Gaza', where: 'Ventilator Cinema, Amsterdam', text: ['Short films, a talk on cultural boycott and a community dinner, on the night of Eurovision.'] },
+    { slug: 'raffle-for-beirut', date: '30 Aug 2020', title: 'Raffle for Beirut', series: 'Bloemstraat presents', support: 'Haven for Artists', line: 'In support of Haven for Artists', where: 'Online', text: ['A raffle of friends’ work after the Beirut port explosion. €2,465 raised.'] }
+  ];
+  var MAIN = ['Liberatory Visions', 'Liberatory Sounds', 'Bloemstraat presents', 'Bloemstraat with…'];
+  var FILTERS = ['All'].concat(MAIN);
+  var QUESTIONS = [
+    ['What is Bloemstraat?', 'A small group in Amsterdam that puts on events about freedom, resistance and liberation: film screenings, listening sessions, dinners, markets and quizzes.'],
+    ['Who is behind it?', 'A community of venues, collectives, collaborators and facilitators. They are all named on the About page.'],
+    ['Where does the money go?', 'When an event raises money, it goes to a named group. You can see which on each event, under “In support of”.'],
+    ['What if I can’t afford a ticket?', 'Message us and come anyway. Most events are pay what you can.'],
+    ['Can I host an event with Bloemstraat?', 'Yes. If it has to do with freedom, resistance or liberation, we can help you put it on. Tell us your idea on the Get involved page.'],
+    ['Where and when do events happen?', 'In venues across Amsterdam, such as Ventilator Cinema, OT301 and Café Saarein, a few times a year.']
+  ];
+  var $ = function (id) { return document.getElementById(id); };
+  var esc = function (s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); };
+  var groupOf = function (e) { return MAIN.indexOf(e.series) > -1 ? e.series : 'Bloemstraat presents'; };
+  var bySlug = {}; EVENTS.forEach(function (e) { bySlug[e.slug] = e; });
+  var ARROW = '<span class="i ar" aria-hidden="true">→</span>';
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // the series sits on the label only when it adds something the title does not already say
+  var NAMED = ['Liberatory Visions', 'Bloemstraat presents'];
+  function lab(e) { return (NAMED.indexOf(e.series) > -1 ? '<b>' + esc(e.series) + '</b> / ' : '') + esc(e.date); }
+  function tile(e) {
+    return '<a class="tile" href="#' + e.slug + '"><span class="tile-pic"><span class="tile-in"></span><span class="lab mono">' + lab(e) + '</span><span class="go">' + ARROW + '</span></span>' +
+      '<span class="tile-words"><span class="tile-title">' + esc(e.title) + '</span><span class="mono quiet">' + esc(e.line) + '</span></span></a>';
+  }
+
+  // home
+  $('past').innerHTML = EVENTS.slice(1, 9).map(tile).join('');
+  $('questions').innerHTML = QUESTIONS.map(function (q, i) {
+    return '<div class="q"><h3><button type="button" aria-expanded="false" aria-controls="a' + i + '" id="q' + i + '"><span>' + esc(q[0]) + '</span><i class="plus" aria-hidden="true"></i></button></h3>' +
+      '<div class="a" id="a' + i + '" role="region" aria-labelledby="q' + i + '"><div><p>' + esc(q[1]) + '</p></div></div></div>';
+  }).join('');
+  $('questions').addEventListener('click', function (ev) {
+    var b = ev.target.closest('button'); if (!b) return;
+    var open = b.getAttribute('aria-expanded') !== 'true';
+    b.setAttribute('aria-expanded', String(open)); b.closest('.q').classList.toggle('open', open);
+  });
+  function nudge(id, dir) { var el = $(id); var c = el.querySelector('.tile'); var step = c ? c.getBoundingClientRect().width : 300; el.scrollBy({ left: dir * step * 2, behavior: reduce ? 'auto' : 'smooth' }); }
+  $('past-prev').addEventListener('click', function () { nudge('past', -1); });
+  $('past-next').addEventListener('click', function () { nudge('past', 1); });
+
+  // events: pictures or list, filtered by series
+  var state = { filter: 'All', list: false, view: 'home' };
+  function renderEvents() {
+    var shown = EVENTS.filter(function (e) { return state.filter === 'All' || groupOf(e) === state.filter; });
+    $('events-grid').innerHTML = shown.map(tile).join('');
+    $('events-rows').innerHTML = shown.map(function (e) {
+      return '<li><a href="#' + e.slug + '" data-lab="' + (NAMED.indexOf(e.series) > -1 ? esc(e.series) + ' / ' : '') + esc(e.date) + '"><span class="mono">' + esc(e.date) + '</span><span class="ev">' + esc(e.title) + ARROW + '</span><span class="mono">' + (MAIN.indexOf(e.series) > -1 ? '<span class="sr">Series: </span>' + esc(e.series) : '') + '</span><span class="mono"><span class="sr">In support of: </span>' + esc(e.support) + '</span></a></li>';
+    }).join('');
+    $('events-grid').hidden = state.list; $('events-list').hidden = !state.list;
+    $('events-count').textContent = shown.length + (shown.length === 1 ? ' event' : ' events') + ', newest first';
+    $('series-links').innerHTML = FILTERS.slice(1).map(function (f) { return '<button class="chipb" type="button" data-filter="' + esc(f) + '" aria-pressed="' + (f === state.filter) + '">' + esc(f) + '</button>'; }).join('');
+    renderDock();
+  }
+  function setFilter(f) { state.filter = (f === state.filter && f !== 'All') ? 'All' : f; renderEvents(); }
+  $('series-links').addEventListener('click', function (ev) { var b = ev.target.closest('button'); if (b) setFilter(b.getAttribute('data-filter')); });
+
+  // dock: series buttons on home, glass bar with filters on events
+  function renderDock() {
+    var d = $('dock');
+    if (state.view === 'home') {
+      d.className = 'dock'; d.hidden = false;
+      d.innerHTML = '<div class="group" role="group" aria-label="Jump to a series">' + FILTERS.slice(1).map(function (f) { return '<button class="chipb" type="button" data-jump="' + esc(f) + '">' + esc(f) + '</button>'; }).join('') + '</div>';
+    } else if (state.view === 'events') {
+      d.className = 'dock bar'; d.hidden = false;
+      d.innerHTML = '<div class="seg" role="group" aria-label="How to show the events"><button type="button" data-list="0" aria-pressed="' + !state.list + '">Pictures</button><button type="button" data-list="1" aria-pressed="' + state.list + '">List</button></div>' +
+        '<div class="group" role="group" aria-label="Show one series">' + FILTERS.map(function (f) { return '<button class="chipb" type="button" data-filter="' + esc(f) + '" aria-pressed="' + (f === state.filter) + '">' + esc(f) + '</button>'; }).join('') + '</div>' +
+        '<span class="count mono quiet">' + EVENTS.filter(function (e) { return state.filter === 'All' || groupOf(e) === state.filter; }).length + ' shown</span>';
+    } else { d.hidden = true; d.innerHTML = ''; }
+  }
+  $('dock').addEventListener('click', function (ev) {
+    var b = ev.target.closest('button'); if (!b) return;
+    if (b.hasAttribute('data-jump')) { state.filter = b.getAttribute('data-jump'); renderEvents(); location.hash = 'events'; return; }
+    if (b.hasAttribute('data-list')) { state.list = b.getAttribute('data-list') === '1'; renderEvents(); return; }
+    if (b.hasAttribute('data-filter')) { var f = b.getAttribute('data-filter'); state.filter = f; renderEvents(); }
+  });
+
+  $('foot-tags').innerHTML = FILTERS.slice(1).map(function (f) { return '<button class="chipb" type="button" data-jump="' + esc(f) + '">' + esc(f) + '</button>'; }).join('');
+  $('foot-tags').addEventListener('click', function (ev) { var b = ev.target.closest('button'); if (!b) return; state.filter = b.getAttribute('data-jump'); renderEvents(); if (state.view === 'events') { window.scrollTo({ top: 0, behavior: 'instant' }); } else { location.hash = 'events'; } });
+  if ('IntersectionObserver' in window) new IntersectionObserver(function (en) { document.body.classList.toggle('foot-in', en[0].isIntersecting); }).observe($('foot'));
+
+  // list rows: a picture follows the pointer
+  var peek = $('peek'), px = 0, py = 0, tx = 0, ty = 0, raf = 0;
+  function loop() { px += (tx - px) * 0.18; py += (ty - py) * 0.18; peek.style.transform = 'translate(' + px + 'px,' + py + 'px)'; raf = peek.classList.contains('on') ? requestAnimationFrame(loop) : 0; }
+  $('events-rows').addEventListener('mousemove', function (ev) {
+    var a = ev.target.closest('a'); if (!a || reduce) return;
+    tx = Math.min(ev.clientX + 28, window.innerWidth - 240); ty = Math.max(ev.clientY - 150, 70);
+    if (!peek.classList.contains('on')) { px = tx; py = ty; peek.classList.add('on'); }
+    $('peek-lab').textContent = a.getAttribute('data-lab');
+    if (!raf) raf = requestAnimationFrame(loop);
+  });
+  $('events-rows').addEventListener('mouseleave', function () { peek.classList.remove('on'); });
+
+  // one event
+  function renderEvent(e) {
+    $('ev-lab').innerHTML = (NAMED.indexOf(e.series) > -1 ? '<b style="font-weight:500">' + esc(e.series) + '</b> / ' : '') + esc(e.when ? e.when.split(',')[0] : e.date);
+    $('ev-title').textContent = e.title;
+    $('ev-text').innerHTML = e.text.map(function (t) { return '<p>' + esc(t) + '</p>'; }).join('');
+    var rows = [['When', e.when || e.date], ['Where', e.where]];
+    if (e.door) rows.push(['Entry', e.door]);
+    rows.push([e.door ? 'With' : 'In support of', e.door ? e.withWho : e.support]);
+    (e.lineup || []).forEach(function (l) { rows.push(l); });
+    $('ev-rows').innerHTML = rows.map(function (r) { return '<div><dt class="mono quiet">' + esc(r[0]) + '</dt><dd>' + esc(r[1]) + '</dd></div>'; }).join('');
+    $('ev-cal').hidden = !e.door; $('ev-status').textContent = '';
+    $('more').innerHTML = EVENTS.filter(function (x) { return x.slug !== e.slug; }).slice(0, 8).map(tile).join('');
+  }
+  $('ev-cal').addEventListener('click', function () { $('ev-status').textContent = 'Not wired up in this mockup.'; });
+
+  // forms: nothing is sent from a mockup
+  [['signup', 'signup-status']].forEach(function (p) {
+    $(p[0]).addEventListener('submit', function (ev) { ev.preventDefault(); $(p[1]).textContent = 'This is a mockup, so nothing was sent.'; });
+  });
+
+  // menu: the button grows into the panel, then the words arrive
+  var menu = $('menu'), btn = $('menu-btn'), panel = $('menu-panel'), closeTimer = 0;
+  function setMenu(open) {
+    clearTimeout(closeTimer);
+    if (open) { panel.hidden = false; menu.style.setProperty('--h', panel.offsetHeight + 'px'); requestAnimationFrame(function () { menu.classList.add('open'); }); }
+    else { menu.classList.remove('open'); closeTimer = setTimeout(function () { panel.hidden = true; }, 560); }
+    btn.setAttribute('aria-expanded', String(open));
+  }
+  btn.addEventListener('click', function () { setMenu(!menu.classList.contains('open')); });
+  document.addEventListener('click', function (ev) { if (!ev.target.closest('#menu') && menu.classList.contains('open')) setMenu(false); });
+  document.addEventListener('keydown', function (ev) { if (ev.key === 'Escape' && menu.classList.contains('open')) { setMenu(false); btn.focus(); } });
+  panel.addEventListener('click', function (ev) { if (ev.target.closest('a')) setMenu(false); });
+
+  // things arrive as you reach them; they are in place already if scripts or motion are off
+  var io = ('IntersectionObserver' in window && !reduce) ? new IntersectionObserver(function (entries) {
+    entries.forEach(function (en) { if (en.isIntersecting) { en.target.classList.remove('pre'); io.unobserve(en.target); } });
+  }, { rootMargin: '0px 0px -8% 0px' }) : null;
+  function arm() {
+    if (!io) return;
+    Array.prototype.forEach.call(document.querySelectorAll('.view:not([hidden]) .rv'), function (el) {
+      if (el.getBoundingClientRect().top > window.innerHeight * 0.92) { el.classList.add('pre'); io.observe(el); }
+    });
+  }
+
+  // Get involved, Host an event and Support us are parked: the links stay in place but do not go anywhere yet
+  var PARKED = ['#get-involved', '#host', '#support'];
+  Array.prototype.forEach.call(document.querySelectorAll('a[href]'), function (a) { if (PARKED.indexOf(a.getAttribute('href')) > -1) { a.setAttribute('aria-disabled', 'true'); a.title = 'Coming soon'; } });
+  document.addEventListener('click', function (ev) { var a = ev.target.closest('a[href]'); if (a && PARKED.indexOf(a.getAttribute('href')) > -1) ev.preventDefault(); }, true);
+
+  // routing on plain #names
+  var VIEWS = ['home', 'events', 'event'];
+  var first = true;
+  function show(view, focusId, scrollTo) {
+    var same = state.view === view && !first;
+    state.view = view;
+    VIEWS.forEach(function (v) { $('view-' + v).hidden = v !== view; });
+    Array.prototype.forEach.call(document.querySelectorAll('[data-nav]'), function (a) {
+      var on = a.getAttribute('data-nav') === view || (a.getAttribute('data-nav') === 'events' && view === 'event');
+      if (on) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
+    });
+    renderDock(); peek.classList.remove('on');
+    var target = scrollTo ? $(scrollTo) : null;
+    if (target) { target.scrollIntoView({ behavior: same && !reduce ? 'smooth' : 'instant', block: 'start' }); }
+    else if (!first) { window.scrollTo({ top: 0, left: 0, behavior: 'instant' }); }
+    if (view === 'home' && !same) primeStrip();
+    updateTop(); arm();
+    if (!first) { var f = $(focusId); if (f) f.focus({ preventScroll: true }); }
+    first = false;
+  }
+  var sheetWrap = $('about-sheet'), sheetOpen = false, lastHash = 'home', sheetTimer = 0, sheetFrom = null;
+  function openSheet() {
+    clearTimeout(sheetTimer); if (menu.classList.contains('open')) setMenu(false);
+    sheetFrom = document.activeElement; sheetOpen = true; sheetWrap.hidden = false;
+    Array.prototype.forEach.call(sheetWrap.querySelectorAll('[data-close]'), function (a) { a.setAttribute('href', '#' + lastHash); });
+    document.documentElement.style.overflow = 'hidden';
+    requestAnimationFrame(function () { requestAnimationFrame(function () { sheetWrap.classList.add('open'); }); });
+    $('about-h').focus({ preventScroll: true });
+  }
+  function closeSheet() {
+    sheetOpen = false; sheetWrap.classList.remove('open'); document.documentElement.style.overflow = '';
+    sheetTimer = setTimeout(function () { sheetWrap.hidden = true; }, 600);
+    if (sheetFrom && sheetFrom.focus) sheetFrom.focus({ preventScroll: true });
+  }
+  document.addEventListener('keydown', function (ev) { if (ev.key === 'Escape' && sheetOpen) location.hash = lastHash; });
+  function route() {
+    var h = (location.hash || '').replace(/^#/, '');
+    if (h === 'about') { if (first) show('home', 'home-h'); return openSheet(); }
+    // leaving About for the page underneath just closes the sheet, so that page keeps its place
+    if (sheetOpen && (h || 'home') === lastHash) { closeSheet(); return; }
+    if (sheetOpen) closeSheet();
+    if (h === 'get-involved' || h === 'host' || h === 'support') h = '';
+    lastHash = h || 'home';
+    if (!h || h === 'home' || h === 'main') return show('home', 'home-h');
+    if (h === 'events') return show('events', 'events-h');
+    if (bySlug[h]) { renderEvent(bySlug[h]); return show('event', 'ev-title'); }
+    show('home', 'home-h');
+  }
+  // Home: the big logo starts across the bottom of the black block and, as you scroll, shrinks into the pill in the top-left corner
+  var markEl = $('mark'), heroEl = $('mark-hero'), M = 20, ticking = false;
+  var ease = function (t) { return t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; };
+  var opening = document.querySelector('.opening');
+  function updateTop() {
+    var home = state.view === 'home';
+    document.body.classList.toggle('home', home);
+    if (!home) { document.body.classList.remove('dock-in'); return; }
+    var W = document.documentElement.clientWidth, H = heroEl.offsetHeight, s = window.scrollY, vh = window.innerHeight;
+    var bw = W - 2 * M, sw = 112, sy = M + (40 - sw * 193 / 1200) / 2;
+    var shrinkEnd = Math.max(1, (H - 2 * M) * 0.7);
+    var e = ease(Math.min(1, Math.max(0, s / shrinkEnd)));
+    if (reduce) e = (H - M - sw * 193 / 1200 - s <= sy) ? 1 : 0;
+    var w = bw + (sw - bw) * e, h = w * 193 / 1200;
+    var x = M + 20 * e;
+    var y = Math.max(sy, H - M - h - s);
+    var d = y - sy;
+    var navP = Math.min(1, Math.max(0, (200 - d) / 160));
+    markEl.style.transform = 'translate(' + x.toFixed(2) + 'px,' + y.toFixed(2) + 'px) scale(' + (w / 1200).toFixed(5) + ')';
+    document.body.style.setProperty('--pill-o', d < 0.5 ? 1 : 0);
+    document.body.classList.toggle('docked', d < 0.5);
+    document.body.classList.toggle('dock-in', opening.getBoundingClientRect().bottom < vh - 64);
+  }
+  function onScroll() { if (ticking) return; ticking = true; requestAnimationFrame(function () { ticking = false; updateTop(); }); }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll);
+
+  // photo strip: drifts on its own (CSS), so there is nothing to set up here
+  function primeStrip() {}
+  window.addEventListener('hashchange', route);
+  renderEvents();
+  route();
+})();
+</script>
+</body>
+</html>
