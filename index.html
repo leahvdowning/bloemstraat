@@ -35,6 +35,9 @@
   --ease: cubic-bezier(0.37, 0, 0.63, 1);
   --m: 20px;
   --glass: 0 0 2px rgba(0, 0, 0, 0.2);
+  --gap: 96px;
+  --frost: rgba(249, 249, 244, 0.62);
+  --frost-fx: blur(24px) saturate(1.6);
 }
 * { box-sizing: border-box; }
 body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--sans); font-size: 16px; line-height: 1.45; letter-spacing: 0.01em; -webkit-font-smoothing: antialiased; }
@@ -68,15 +71,15 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 
 /* header: logo and links on the left, built like the menu button */
 .switch { position: fixed; top: var(--m); left: var(--m); z-index: 40; display: flex; align-items: center; gap: 8px; }
-.sw-logo { position: relative; flex: none; width: 152px; height: 40px; border-radius: 100px; background: rgba(249, 249, 244, 0.78); -webkit-backdrop-filter: blur(24px) saturate(1.1); backdrop-filter: blur(24px) saturate(1.1); box-shadow: var(--glass); transition: opacity 0.3s var(--ease); }
+.sw-logo { position: relative; flex: none; width: 152px; height: 40px; border-radius: 100px; background: var(--frost); -webkit-backdrop-filter: var(--frost-fx); backdrop-filter: var(--frost-fx); box-shadow: var(--glass); transition: opacity 0.3s var(--ease); }
 .sw-logo svg { position: absolute; left: 20px; top: 11px; width: 112px; height: auto; display: block; }
 .sw-logo svg path { fill: var(--ink); }
 /* on Home the big logo travels into this pill as you scroll, so the pill waits empty and the links wait at the edge */
 body.home .sw-logo { opacity: var(--pill-o, 0); }
 body.home .sw-logo svg { visibility: hidden; }
 body.home .sw-logo:focus-visible { opacity: 1; }
-.mark { position: fixed; left: 0; top: 0; z-index: 41; width: 1200px; height: auto; transform-origin: 0 0; pointer-events: none; display: none; will-change: transform; }
-.mark path { fill: var(--paper); transition: fill 0.3s var(--ease); }
+.mark { position: fixed; left: 0; top: 0; z-index: 41; width: 1200px; height: auto; transform-origin: 0 0; pointer-events: none; display: none; will-change: transform; overflow: visible; }
+.mark path { fill: var(--paper); transform-box: fill-box; transform-origin: 50% 100%; transition: fill 0.3s var(--ease), transform 0.8s cubic-bezier(0.2, 0.7, 0.2, 1); }
 body.docked .mark path { fill: var(--ink); }
 .js body.home .mark { display: block; }
 .dock { transition: opacity 0.4s var(--ease), transform 0.4s var(--ease); }
@@ -85,8 +88,10 @@ body.home:not(.dock-in) .dock > * { pointer-events: none; }
 
 /* menu: the button grows into the panel */
 .menu { position: fixed; top: var(--m); right: var(--m); z-index: 45; width: 112px; height: 40px; }
-.glass { position: absolute; top: 0; right: 0; width: 112px; height: 40px; border-radius: 100px; background: rgba(249, 249, 244, 0.78); -webkit-backdrop-filter: blur(24px) saturate(1.1); backdrop-filter: blur(24px) saturate(1.1); box-shadow: var(--glass); transition: width 0.5s var(--ease), height 0.5s var(--ease), border-radius 0.5s var(--ease); }
-.menu.open .glass { width: min(410px, calc(100vw - 2 * var(--m))); height: var(--h, 440px); border-radius: 12px; background: rgba(249, 249, 244, 0.82); }
+.glass { position: absolute; top: 0; right: 0; width: 112px; height: 40px; border-radius: 100px; background: var(--frost); -webkit-backdrop-filter: var(--frost-fx); backdrop-filter: var(--frost-fx); box-shadow: var(--glass); transition: width 0.5s var(--ease), height 0.5s var(--ease), border-radius 0.5s var(--ease); }
+.menu.open .glass { width: min(410px, calc(100vw - 2 * var(--m))); height: var(--h, 440px); border-radius: 12px; -webkit-backdrop-filter: blur(32px) saturate(1.7); backdrop-filter: blur(32px) saturate(1.7); }
+.veil { position: fixed; inset: 0; z-index: 44; background: rgba(249, 249, 244, 0.22); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); opacity: 0; pointer-events: none; transition: opacity 0.5s var(--ease); }
+body.menu-open .veil { opacity: 1; pointer-events: auto; }
 .menu-btn { position: absolute; top: 0; right: 0; width: 112px; height: 40px; display: flex; align-items: center; justify-content: center; gap: 8px; border-radius: 100px; font-family: var(--mono); font-size: 14px; letter-spacing: 0.02em; }
 .menu-btn .when-open { display: none; }
 .menu.open .menu-btn .when-open { display: flex; align-items: center; gap: 8px; }
@@ -118,14 +123,18 @@ main { min-height: 100vh; }
 .rv.pre { transform: translateY(56px); }
 
 /* home */
-.mark-hero { position: relative; background: var(--ink); height: clamp(360px, 42vw, 640px); }
+.mark-hero { position: relative; background: var(--ink); height: calc((100vw - 2 * var(--m)) * 0.16083 + 136px); }
 .mark-hero .ghost { position: absolute; left: var(--m); right: var(--m); bottom: var(--m); width: calc(100% - 2 * var(--m)); height: auto; display: block; }
 .mark-hero .ghost path { fill: var(--paper); }
 .js .mark-hero .ghost { visibility: hidden; }
-.opening { padding: 120px var(--m); display: flex; flex-direction: column; align-items: center; gap: 32px; }
+.opening { padding: 72px var(--m) 64px; display: flex; flex-direction: column; align-items: center; gap: 32px; }
 .opening .statement { max-width: 1104px; text-align: center; font-size: clamp(26px, 2.8vw, 40px); font-weight: 300; line-height: 1.2; letter-spacing: 0; text-wrap: pretty; }
 .opening .asks { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
-.strip { padding: 32px 0; overflow: hidden; }
+.strip { padding: 32px 0 0; overflow: hidden; }
+.strip.paused .strip-track { animation-play-state: paused; }
+.strip-ctl { display: flex; justify-content: flex-end; padding: 16px var(--m) 0; }
+.pause { height: 24px; font-family: var(--mono); font-size: 12px; letter-spacing: 0.02em; color: var(--quiet); transition: color 0.2s; }
+.pause:hover, .pause:focus-visible { color: var(--ink); }
 .strip-row { overflow: hidden; }
 .strip-track { display: flex; align-items: center; width: max-content; animation: drift 90s linear infinite; animation-delay: -7s; }
 @keyframes drift { to { transform: translateX(-50%); } }
@@ -138,7 +147,7 @@ main { min-height: 100vh; }
 .ph.s { width: 448px; height: 300px; background: var(--pic-3); }
 .ph .cap { position: absolute; left: 16px; bottom: 16px; right: 16px; opacity: 0; transform: translateY(6px); transition: opacity 0.35s var(--ease), transform 0.35s var(--ease); }
 .ph:hover .cap { opacity: 1; transform: none; }
-.spot.panel { margin: 0 120px; }
+.spot.panel { margin: 56px 120px 0; }
 .spot { background: var(--stone); padding: 64px 32px; display: flex; flex-direction: column; align-items: center; gap: 48px; }
 .spot h2 { font-size: clamp(40px, 5.6vw, 80px); font-weight: 300; line-height: 1.05; letter-spacing: -0.01em; text-align: center; }
 .spot h2 a { display: block; transition: letter-spacing 0.5s var(--ease); }
@@ -149,12 +158,19 @@ main { min-height: 100vh; }
 .spot .k { color: var(--quiet); }
 .spot:has(.spot-link:hover) .poster, .spot:has(.spot-link:focus-visible) .poster { transform: rotate(-0.8deg) scale(1.02); }
 .spot:has(.spot-link:hover) h2 a { letter-spacing: 0; }
-.row-head { display: flex; align-items: center; justify-content: space-between; padding: 96px var(--m) 24px; }
+.row-head { display: flex; align-items: center; justify-content: space-between; padding: var(--gap) var(--m) 24px; }
 .row-head h2 { font-size: 16px; font-weight: 500; }
 .row-head .tools { display: flex; align-items: center; gap: 8px; }
 .round { font-family: var(--mono); font-size: 14px; width: 32px; height: 32px; border-radius: 50%; background: var(--pill); display: inline-flex; align-items: center; justify-content: center; transition: background 0.2s, box-shadow 0.2s, transform 0.3s var(--ease); }
 .round:hover { background: var(--white); box-shadow: var(--glass); }
 .round.next:hover { transform: translateX(3px); } .round.prev:hover { transform: translateX(-3px); }
+
+/* where the money has gone: the groups, large, each one leads to its event */
+.given-list { padding: 0 var(--m); font-size: clamp(32px, 4.4vw, 64px); font-weight: 300; line-height: 1.12; letter-spacing: -0.01em; text-wrap: pretty; }
+.given-list li { display: inline; white-space: nowrap; }
+.given-list a { transition: opacity 0.3s var(--ease), color 0.3s var(--ease); }
+.given-list .sep { color: var(--dot); }
+.given-list:has(a:hover) a:not(:hover), .given-list:has(a:focus-visible) a:not(:focus-visible) { opacity: 0.22; }
 
 /* tiles: edge to edge, a dotted line between */
 .tiles { display: grid; grid-template-columns: repeat(4, 1fr); }
@@ -177,7 +193,7 @@ main { min-height: 100vh; }
 .rv.pre .tile-in { transform: scale(1.14); }
 
 /* questions: label on the left, list on the right */
-.qs { display: grid; grid-template-columns: 460px 1fr; padding: 96px var(--m) 120px; }
+.qs { display: grid; grid-template-columns: 460px 1fr; padding: var(--gap) var(--m) 120px; }
 .qs-label { border-top: 1px dotted var(--dot); padding-top: 32px; }
 .qs h2 { font-size: 16px; font-weight: 500; }
 .qs-label p { margin-top: 8px; color: var(--quiet); }
@@ -199,7 +215,7 @@ main { min-height: 100vh; }
 .q.open .a { grid-template-rows: 1fr; }
 
 /* closing panel: the line on the left, the actions on the right sharing its top and bottom */
-.band.panel { margin: 48px 120px 0; }
+.band.panel { margin: var(--gap) 120px 0; }
 .band { margin-top: 48px; background: var(--sand); padding: 48px 32px; display: flex; justify-content: space-between; align-items: stretch; gap: 40px; }
 .band .line { font-size: clamp(30px, 2.8vw, 40px); font-weight: 500; line-height: 1.2; letter-spacing: -0.005em; }
 .band .side { width: 464px; flex: none; display: flex; flex-direction: column; justify-content: space-between; gap: 8px; }
@@ -207,7 +223,7 @@ main { min-height: 100vh; }
 .btn.paper { background: var(--paper); box-shadow: var(--glass); }
 .btn.paper:hover, .btn.paper:focus-visible { background: var(--white); }
 .band-status { padding: 8px 40px 0; }
-.band-status:empty { padding: 0; }
+.band-status:empty { padding: 0; min-height: 0; }
 .field-pill { display: flex; align-items: center; gap: 8px; width: 100%; height: 48px; padding: 0 8px 0 20px; border-radius: 100px; background: var(--paper); box-shadow: var(--glass); }
 .field-pill input { flex: 1; min-width: 0; border: 0; background: transparent; font: inherit; font-size: 16px; color: var(--ink); outline: none; }
 .field-pill:focus-within { outline: 2px solid var(--ink); outline-offset: 2px; }
@@ -226,7 +242,7 @@ body.foot-in .dock > * { pointer-events: none; }
 /* about: a sheet over the page, as on Sapiens */
 .sheet-wrap { position: fixed; inset: 0; z-index: 50; }
 .sheet-bg { position: absolute; inset: 0; background: rgba(17, 17, 16, 0.45); opacity: 0; transition: opacity 0.5s var(--ease); }
-.sheet { position: absolute; top: 0; right: 0; bottom: 0; left: 280px; background: var(--paper); box-shadow: var(--glass); overflow-y: auto; overscroll-behavior: contain; padding: 40px 20px 96px 40px; transform: translateX(100%); transition: transform 0.6s var(--ease); }
+.sheet { position: absolute; top: 0; right: 0; bottom: 0; left: clamp(80px, calc(100vw - 1160px), 280px); background: var(--paper); box-shadow: var(--glass); overflow-y: auto; overscroll-behavior: contain; padding: 40px 20px 96px 40px; transform: translateX(100%); transition: transform 0.6s var(--ease); }
 .sheet-wrap.open .sheet-bg { opacity: 1; }
 .sheet-wrap.open .sheet { transform: none; }
 .sheet-close { position: absolute; top: 40px; right: 20px; display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 14px; letter-spacing: 0.02em; opacity: 0; transition: opacity 0.3s var(--ease) 0.3s; }
@@ -237,7 +253,14 @@ body.foot-in .dock > * { pointer-events: none; }
 .sheet-nav .menu-list a[aria-current="page"], .sheet-nav .menu-list a:hover, .sheet-nav .menu-list a:focus-visible { opacity: 1; }
 .sheet-nav .menu-list:hover a, .sheet-nav .menu-list:focus-within a { opacity: 0.35; }
 .sheet-nav .menu-list a:hover, .sheet-nav .menu-list a:focus-visible { opacity: 1; transform: translateX(6px); }
-.sheet-body { display: flex; flex-direction: column; gap: 64px; font-size: 24px; line-height: 30px; letter-spacing: 0.015em; }
+.sheet-body { display: flex; flex-direction: column; gap: 96px; font-size: 24px; line-height: 30px; letter-spacing: 0.015em; }
+.sb-sec { display: flex; flex-direction: column; gap: 64px; }
+.sb-sec + .sb-sec { border-top: 1px dotted var(--dot); padding-top: 40px; }
+.sb-nums { padding-left: 230px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px 24px; }
+.sb-nums div { display: flex; flex-direction: column-reverse; gap: 8px; }
+.sb-nums dd { font-size: 64px; font-weight: 300; line-height: 1; letter-spacing: -0.01em; }
+.sb-nums dt { margin: 0; }
+.sheet .field-pill { margin-top: 4px; max-width: 464px; }
 .sheet .lab { display: block; margin-bottom: 12px; font-family: var(--mono); font-size: 12px; font-weight: 400; line-height: 1.5; letter-spacing: 0.1em; text-transform: uppercase; }
 .sb-indent { padding-left: 230px; display: flex; flex-direction: column; gap: 30px; }
 .sb-qa { gap: 40px; }
@@ -246,6 +269,9 @@ body.foot-in .dock > * { pointer-events: none; }
 /* events */
 .ev-intro { padding: 160px var(--m) 96px; display: flex; flex-direction: column; align-items: center; gap: 32px; text-align: center; }
 .ev-intro h1 { max-width: 700px; font-size: clamp(28px, 2.8vw, 40px); font-weight: 300; line-height: 1.2; text-wrap: balance; }
+.ev-intro h1 .kind { text-decoration: underline dotted; text-decoration-color: var(--dot); text-decoration-thickness: 2px; text-underline-offset: 0.16em; transition: color 0.3s var(--ease); }
+.ev-intro h1:has(.kind:hover) .kind:not(:hover), .ev-intro h1.picked .kind:not([aria-pressed="true"]):not(:hover) { color: var(--quiet); }
+.ev-intro h1 .kind[aria-pressed="true"] { text-decoration-style: solid; text-decoration-color: currentColor; text-decoration-thickness: 1.5px; }
 .tags { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
 .intro2 { display: grid; grid-template-columns: 1fr 1fr; align-items: center; padding: 170px var(--m) 120px; }
 .intro2 > div { justify-self: center; max-width: 330px; text-align: center; }
@@ -254,7 +280,7 @@ body.foot-in .dock > * { pointer-events: none; }
 .intro2 .series button { color: var(--quiet); font-weight: 500; transition: color 0.2s; }
 .intro2 .series button:hover, .intro2 .series button[aria-pressed="true"] { color: var(--ink); }
 .intro2 .statement { font-size: 16px; }
-.sortline { display: flex; justify-content: flex-end; padding: 0 var(--m) 10px; }
+.sortline { display: flex; justify-content: flex-end; align-items: center; gap: 12px; min-height: 42px; padding: 0 var(--m) 10px; }
 .rows { margin: 0 10px 40px; }
 .rows .hd, .rows a { display: grid; grid-template-columns: 150px 1.5fr 1fr 1.25fr; gap: 20px; align-items: baseline; padding: 0 10px; }
 .rows .hd { padding-bottom: 10px; color: var(--quiet); }
@@ -271,10 +297,12 @@ body.foot-in .dock > * { pointer-events: none; }
 /* dock: filters float at the bottom, as glass */
 .dock { position: fixed; left: 10px; right: 10px; bottom: 10px; z-index: 35; display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 58px; padding: 10px; pointer-events: none; }
 .dock > * { pointer-events: auto; }
-.dock.bar { background: rgba(249, 249, 244, 0.92); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); border-radius: 30px; box-shadow: var(--glass); justify-content: space-between; pointer-events: auto; }
+.dock.bar { background: var(--frost); -webkit-backdrop-filter: var(--frost-fx); backdrop-filter: var(--frost-fx); border-radius: 30px; box-shadow: var(--glass); justify-content: space-between; pointer-events: auto; }
 .chipb { display: inline-flex; align-items: center; height: 40px; padding: 0 20px; border-radius: 100px; background: var(--paper); box-shadow: var(--glass); font-family: var(--mono); font-size: 14px; letter-spacing: 0.02em; white-space: nowrap; transition: background 0.2s, color 0.2s, transform 0.3s var(--ease); }
 .chipb:hover { background: var(--white); transform: translateY(-2px); }
 .chipb[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+.dock:not(.bar) .chipb { background: var(--frost); -webkit-backdrop-filter: var(--frost-fx); backdrop-filter: var(--frost-fx); }
+.dock:not(.bar) .chipb:hover { background: var(--white); }
 .dock .group { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; padding: 2px; }
 .dock .group::-webkit-scrollbar { display: none; }
 .seg { display: flex; padding: 3px; gap: 2px; border-radius: 25px; background: var(--pill); }
@@ -350,11 +378,15 @@ form.host textarea::placeholder { color: var(--quiet); opacity: 1; }
   .menu { width: 92px; } .glass, .menu-btn { width: 92px; }
   .tiles { grid-template-columns: 1fr; }
   .lists { grid-template-columns: 1fr; }
-  .opening { padding: 80px var(--m); }
+  .opening { padding: 56px var(--m) 48px; }
+  .sb-nums { padding-left: 0; }
+  .sb-nums dd { font-size: 48px; }
+  .spot.panel { margin-top: 40px; }
   .q button { font-size: 20px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .strip-track { animation: none; }
+  .strip-ctl { display: none; }
   .strip-row { overflow-x: auto; }
   *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
   .rv.pre, .rv.pre .tile-in { transform: none; }
@@ -383,11 +415,13 @@ form.host textarea::placeholder { color: var(--quiet); opacity: 1; }
       <li><a href="#host">Host an event</a></li>
       <li><a href="#support">Support us</a></li>
       <li><a href="#about">About</a></li>
+      <li><a href="#access">Access</a></li>
+      <li><a href="#contact">Contact</a></li>
       <li><a href="https://www.instagram.com/bloemstraat/">Instagram</a></li>
     </ol>
     <div class="menu-small">
       <p>Bloemstraat makes small, open events about freedom, resistance and liberation. Amsterdam, since 2020.</p>
-      <p><a href="#about">Privacy policy</a>, <a href="#about">Terms of use</a></p>
+      <p><a href="#funders">For funders</a>, <a href="#about">Privacy policy</a>, <a href="#about">Terms of use</a></p>
     </div>
   </nav>
   <button class="menu-btn" id="menu-btn" type="button" aria-expanded="false" aria-controls="menu-panel">
@@ -395,6 +429,7 @@ form.host textarea::placeholder { color: var(--quiet); opacity: 1; }
     <span class="when-open"><svg class="i" aria-hidden="true"><use href="#i-x"/></svg>Close</span>
   </button>
 </div>
+<div class="veil" id="veil" aria-hidden="true"></div>
 
 <svg class="mark" viewBox="0 0 1200 193" width="1200" height="193" aria-hidden="true" focusable="false" id="mark"><path d="M1139.8 190.585V37.9882H1117.37V1.71695H1200V37.9882H1177.57V190.585H1139.8Z"/><path d="M1007.97 190.585L1026.22 1.71695H1090.28L1108.2 190.585H1072.47L1069.78 160.109H1047.03L1044.67 190.585H1007.97ZM1049.72 129.954H1066.89L1058.62 33.9104H1056.91L1049.72 129.954Z"/><path d="M894.712 190.585L912.955 1.71695H977.02L994.941 190.585H959.207L956.524 160.109H933.774L931.413 190.585H894.712ZM936.457 129.954H953.626L945.363 33.9104H943.646L936.457 129.954Z"/><path d="M788.534 190.585V1.71695H846.482C856.14 1.71695 863.438 3.93472 868.374 8.37027C873.31 12.7343 876.601 18.8868 878.246 26.8279C879.963 34.6974 880.822 43.9619 880.822 54.6215C880.822 64.9234 879.498 73.1507 876.851 79.3032C874.276 85.4557 869.375 89.7124 862.15 92.0733C868.088 93.2895 872.237 96.2584 874.598 100.98C877.03 105.63 878.246 111.675 878.246 119.116V190.585H841.009V116.648C841.009 111.139 839.865 107.741 837.575 106.453C835.358 105.094 831.745 104.414 826.737 104.414V190.585H788.534ZM826.952 71.6841H836.073C841.296 71.6841 843.907 65.9966 843.907 54.6215C843.907 47.2528 843.334 42.4238 842.19 40.1345C841.045 37.8452 838.899 36.7005 835.751 36.7005H826.952V71.6841Z"/><path d="M711.223 190.585V37.9882H688.795V1.71695H771.425V37.9882H748.997V190.585H711.223Z"/><path d="M631.766 192.302C614.524 192.302 602.076 188.01 594.421 179.425C586.838 170.84 583.046 157.176 583.046 138.432V119.974H620.39V143.583C620.39 147.947 621.034 151.381 622.322 153.885C623.681 156.317 626.006 157.533 629.297 157.533C632.731 157.533 635.092 156.532 636.38 154.529C637.739 152.525 638.419 149.235 638.419 144.656C638.419 138.861 637.847 134.032 636.702 130.169C635.557 126.234 633.554 122.514 630.692 119.008C627.902 115.431 624.003 111.282 618.995 106.56L602.04 90.4636C589.377 78.5163 583.046 64.8519 583.046 49.4706C583.046 33.3739 586.766 21.1046 594.206 12.6628C601.718 4.22093 612.557 5.72205e-06 626.722 5.72205e-06C644.035 5.72205e-06 656.304 4.6144 663.53 13.8432C670.827 23.072 674.476 37.094 674.476 55.9093H636.058V42.9246C636.058 40.3491 635.307 38.346 633.804 36.9152C632.374 35.4844 630.406 34.7689 627.902 34.7689C624.898 34.7689 622.68 35.6274 621.249 37.3444C619.89 38.9899 619.21 41.1361 619.21 43.7831C619.21 46.4301 619.925 49.2918 621.356 52.368C622.787 55.4443 625.613 58.9856 629.834 62.9919L651.618 83.9176C655.982 88.067 659.988 92.4668 663.637 97.1169C667.286 101.696 670.219 107.061 672.437 113.214C674.654 119.295 675.763 126.735 675.763 135.534C675.763 153.277 672.472 167.191 665.891 177.279C659.38 187.294 648.005 192.302 631.766 192.302Z"/><path d="M416.342 190.585V1.71695H473.861L489.743 116.862L505.518 1.71695H563.574V190.585H529.019V54.5142L507.342 190.585H473.432L450.467 54.5142V190.585H416.342Z"/><path d="M319.178 190.585V1.71695H394.726V38.2029H357.596V75.0107H393.223V110.531H357.596V153.777H397.194V190.585H319.178Z"/><path d="M250.774 192.302C235.679 192.302 224.125 187.759 216.112 178.674C208.171 169.516 204.201 156.317 204.201 139.076V49.3633C204.201 33.195 208.135 20.9258 216.005 12.5555C223.946 4.18516 235.536 5.72205e-06 250.774 5.72205e-06C266.012 5.72205e-06 277.566 4.18516 285.435 12.5555C293.376 20.9258 297.347 33.195 297.347 49.3633V139.076C297.347 156.317 293.341 169.516 285.328 178.674C277.387 187.759 265.869 192.302 250.774 192.302ZM251.096 157.533C256.819 157.533 259.681 151.989 259.681 140.9V48.7194C259.681 39.4191 256.891 34.7689 251.31 34.7689C245.015 34.7689 241.867 39.5264 241.867 49.0414V141.115C241.867 146.981 242.582 151.202 244.013 153.777C245.444 156.281 247.805 157.533 251.096 157.533Z"/><path d="M111.758 190.585V1.71695H149.532V158.392H188.379V190.585H111.758Z"/><path d="M6.29425e-05 190.585V1.71716H51.1877C64.9235 1.71716 74.9035 5.07959 81.1276 11.8044C87.4232 18.4578 90.571 29.4751 90.571 44.8564V53.1194C90.571 61.9905 88.9613 69.1803 85.742 74.689C82.5942 80.1977 77.7652 83.8105 71.2549 85.5275C79.7683 87.6737 85.4558 92.7173 88.3175 100.658C91.2506 108.528 92.7172 118.15 92.7172 129.525C92.7172 141.759 91.5726 152.454 89.2833 161.611C86.9939 170.769 82.8446 177.887 76.8351 182.966C70.8257 188.046 62.2765 190.585 51.1877 190.585H6.29425e-05ZM36.9152 72.8647H44.6417C48.1472 72.8647 50.4007 71.5054 51.4023 68.7869C52.4039 66.0683 52.9046 62.8132 52.9046 59.0215V40.0274C52.9046 33.9464 50.2219 30.9059 44.8563 30.9059H36.9152V72.8647ZM40.6711 157.319C50.4723 157.319 55.3728 152.669 55.3728 143.368V119.76C55.3728 114.394 54.5501 110.173 52.9046 107.097C51.3307 103.949 48.326 102.375 43.8905 102.375H36.9152V157.104C38.4891 157.247 39.7411 157.319 40.6711 157.319Z"/></svg>
 
@@ -415,9 +450,10 @@ form.host textarea::placeholder { color: var(--quiet); opacity: 1; }
   </div>
 
   <section class="strip" aria-label="Pictures from past events">
-    <div class="strip-row" id="strip" tabindex="0" role="region" aria-label="Pictures from past events. Hover or focus to pause.">
+    <div class="strip-row" id="strip" tabindex="0" role="region" aria-label="Pictures from past events">
       <div class="strip-track"><figure class="ph p"><i></i><figcaption class="cap mono">Open Table / 18 Apr 2026</figcaption></figure><figure class="ph l"><i></i><figcaption class="cap mono">Ireland: Let the People Sing / 14 Mar 2025</figcaption></figure><figure class="ph p"><i></i><figcaption class="cap mono">No Pride in Genocide / 6 Jun 2025</figcaption></figure><figure class="ph s"><i></i><figcaption class="cap mono">Pub Quiz / 26 Mar 2025</figcaption></figure><figure class="ph p"><i></i><figcaption class="cap mono">Pub Quiz #2 / 30 Jul 2025</figcaption></figure><figure class="ph l"><i></i><figcaption class="cap mono">RepresentAsian × Bloemstraat / 7 Dec 2025</figcaption></figure><figure class="ph p" aria-hidden="true"><i></i><figcaption class="cap mono">Open Table / 18 Apr 2026</figcaption></figure><figure class="ph l" aria-hidden="true"><i></i><figcaption class="cap mono">Ireland: Let the People Sing / 14 Mar 2025</figcaption></figure><figure class="ph p" aria-hidden="true"><i></i><figcaption class="cap mono">No Pride in Genocide / 6 Jun 2025</figcaption></figure><figure class="ph s" aria-hidden="true"><i></i><figcaption class="cap mono">Pub Quiz / 26 Mar 2025</figcaption></figure><figure class="ph p" aria-hidden="true"><i></i><figcaption class="cap mono">Pub Quiz #2 / 30 Jul 2025</figcaption></figure><figure class="ph l" aria-hidden="true"><i></i><figcaption class="cap mono">RepresentAsian × Bloemstraat / 7 Dec 2025</figcaption></figure></div>
     </div>
+    <div class="strip-ctl"><button class="pause" type="button" id="strip-pause"><span id="strip-pause-t">Pause</span><span class="sr"> the pictures</span></button></div>
   </section>
 
   <section class="spot panel rv" aria-labelledby="h-spot">
@@ -448,6 +484,11 @@ form.host textarea::placeholder { color: var(--quiet); opacity: 1; }
     <div class="tiles row rv" id="past" tabindex="0" role="region" aria-label="Past events, scroll sideways"></div>
   </section>
 
+  <section aria-labelledby="h-given">
+    <div class="row-head"><h2 id="h-given">Where the money has gone</h2><span class="mono quiet" id="given-count"></span></div>
+    <ul class="given-list rv" id="given"></ul>
+  </section>
+
   <section class="band panel rv" aria-labelledby="h-band">
     <p class="line" id="h-band">Got an event in mind?<br>Bring it to us.</p>
     <div class="side">
@@ -462,7 +503,7 @@ form.host textarea::placeholder { color: var(--quiet); opacity: 1; }
   <p class="status mono quiet band-status" id="signup-status" role="status"></p>
 
   <section class="qs" aria-labelledby="h-q">
-    <div class="qs-label"><h2 id="h-q">Questions</h2><p>Something else? <a href="https://www.instagram.com/bloemstraat/">Message us on Instagram.</a></p></div>
+    <div class="qs-label"><h2 id="h-q">Questions</h2></div>
     <div class="qs-list" id="questions"></div>
   </section>
 </div>
@@ -470,10 +511,10 @@ form.host textarea::placeholder { color: var(--quiet); opacity: 1; }
 <!-- EVENTS -->
 <div class="view" id="view-events" hidden>
   <div class="ev-intro">
-    <h1 id="events-h" tabindex="-1">Every event so far, from film, music and food to talks and quizzes.</h1>
-    <div class="tags" id="series-links" role="group" aria-label="Show one series"></div>
+    <h1 id="events-h" tabindex="-1">Every event so far, from <button class="kind" type="button" data-kind="film" aria-pressed="false">film</button>, <button class="kind" type="button" data-kind="music" aria-pressed="false">music</button> and <button class="kind" type="button" data-kind="food" aria-pressed="false">food</button> to <button class="kind" type="button" data-kind="talks" aria-pressed="false">talks</button> and <button class="kind" type="button" data-kind="quizzes" aria-pressed="false">quizzes</button>.</h1>
+    <p class="mono quiet">Pick a word to see only those events</p>
   </div>
-  <p class="sortline mono quiet" id="events-count" role="status"></p>
+  <div class="sortline"><span class="mono quiet" id="events-count" role="status"></span><button class="btn" type="button" id="events-reset" hidden>Show all<span class="i ar" aria-hidden="true">→</span></button></div>
   <div class="tiles" id="events-grid"></div>
   <div class="rows" id="events-list" hidden>
     <div class="hd mono" aria-hidden="true"><span>Date</span><span>Event</span><span>Series</span><span>In support of</span></div>
@@ -505,14 +546,14 @@ form.host textarea::placeholder { color: var(--quiet); opacity: 1; }
   <div class="tags foot-tags" id="foot-tags" role="group" aria-label="Events by series"></div>
   <div class="last">
     <span>Bloemstraat, Amsterdam, since 2020</span>
-    <span class="links"><a href="#about">Privacy policy</a><a href="#about">Terms of use</a><a href="https://www.instagram.com/bloemstraat/">Instagram</a></span>
+    <span class="links"><a href="#access">Access</a><a href="#contact">Contact</a><a href="#funders">For funders</a><a href="#about">Privacy policy</a><a href="#about">Terms of use</a><a href="https://www.instagram.com/bloemstraat/">Instagram</a></span>
   </div>
 </footer>
 
 
 <div class="sheet-wrap" id="about-sheet" hidden>
   <a class="sheet-bg" href="#home" data-close tabindex="-1" aria-hidden="true"></a>
-  <section class="sheet" role="dialog" aria-modal="true" aria-labelledby="about-h">
+  <section class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="about-h">
     <div class="sheet-grid">
       <nav class="sheet-nav" aria-label="Menu">
         <ol class="menu-list">
@@ -520,29 +561,65 @@ form.host textarea::placeholder { color: var(--quiet); opacity: 1; }
           <li><a href="#get-involved">Get involved</a></li>
           <li><a href="#host">Host an event</a></li>
           <li><a href="#support">Support us</a></li>
-          <li><a href="#about" aria-current="page">About</a></li>
+          <li><a href="#about" data-sec="about" aria-current="page">About</a></li>
+          <li><a href="#access" data-sec="access">Access</a></li>
+          <li><a href="#contact" data-sec="contact">Contact</a></li>
           <li><a href="https://www.instagram.com/bloemstraat/">Instagram</a></li>
         </ol>
         <div class="menu-small">
           <p>Bloemstraat makes small, open events about freedom, resistance and liberation. Amsterdam, since 2020.</p>
-          <p><a href="#about">Privacy policy</a>, <a href="#about">Terms of use</a></p>
+          <p><a href="#funders">For funders</a>, <a href="#about">Privacy policy</a>, <a href="#about">Terms of use</a></p>
         </div>
       </nav>
       <div class="sheet-body">
-        <div><h1 class="lab" id="about-h" tabindex="-1">About Bloemstraat</h1><p>Bloemstraat is committed to freedom, resistance and liberation. We make small, open events in Amsterdam where anyone can walk in, learn something and back a cause.</p></div>
-        <div class="sb-indent"><p>It began in August 2020, when friends in Amsterdam raffled off each other’s work to raise money for Beirut after the port explosion.</p><p>Since 2024 it has put on film screenings, listening sessions, dinners, markets and quizzes, in four series. The events are small on purpose.</p></div>
-        <dl class="sb-indent sb-qa">
-          <div><dt class="lab">Who it’s for:</dt><dd>Anyone. Most events are pay what you can, and you don’t need to know the subject before you arrive.</dd></div>
-          <div><dt class="lab">Where the money goes:</dt><dd>Most events raise money for a group working on the cause the event is about. Each event names the group.</dd></div>
-          <div><dt class="lab">How to take part:</dt><dd>Come to an event, bring one of your own, or help pay for one.</dd></div>
-        </dl>
-        <div><h2 class="lab">The community</h2><p>What matters most about Bloemstraat is the community. We couldn’t do this work without these people.</p></div>
-        <div class="sb-lists">
-          <div><h3 class="lab">Venues</h3><ul><li>Ventilator Cinema</li><li>OT301</li><li>Café Saarein</li><li>Filmhuis Cavia</li><li>Murmur</li><li>Radio Radio</li><li>dubble</li></ul></div>
-          <div><h3 class="lab">Collectives</h3><ul><li>Queer Cinema for Palestine</li><li>BDS Nederland</li><li>Free Palestine NL</li><li>RepresentAsian</li><li>Asian Pride NL</li><li>LibRafi</li><li>Rasa Amsterdam</li><li>Palestina Coalitie</li></ul></div>
-          <div><h3 class="lab">In support of</h3><ul><li>Haven for Artists</li><li>Funds for Gaza</li><li>alQaws</li><li>Mayli Library</li><li>The Great Oven</li><li>Cairde Palestine Belfast</li><li>Palestine Action</li><li>We Are Queer gym</li><li>De Regenboog Groep</li><li>TechMed Gaza</li><li>Saida Initiative</li></ul></div>
-          <div><h3 class="lab">Collaborators and facilitators</h3><ul><li>Fiona Kirk</li><li>Leah Downing</li><li>Eric Stynes</li><li>Louise Lap</li></ul></div>
-        </div>
+        <section class="sb-sec" id="sec-about" aria-labelledby="about-h">
+          <div><h1 class="lab" id="about-h" tabindex="-1">About Bloemstraat</h1><p>Bloemstraat is committed to freedom, resistance and liberation. We make small, open events in Amsterdam where anyone can walk in, learn something and back a cause.</p></div>
+          <div class="sb-indent"><p>It began in August 2020, when friends in Amsterdam raffled off each other’s work to raise money for Beirut after the port explosion.</p><p>Since 2024 it has put on film screenings, listening sessions, dinners, markets and quizzes, in four series. The events are small on purpose.</p></div>
+          <dl class="sb-indent sb-qa">
+            <div><dt class="lab">Who it’s for:</dt><dd>Anyone. Most events are pay what you can, and you don’t need to know the subject before you arrive.</dd></div>
+            <div><dt class="lab">Where the money goes:</dt><dd>Most events raise money for a group working on the cause the event is about. Each event names the group.</dd></div>
+            <div><dt class="lab">How to take part:</dt><dd>Come to an event, bring one of your own, or help pay for one.</dd></div>
+          </dl>
+          <div><h2 class="lab">The community</h2><p>What matters most about Bloemstraat is the community. We couldn’t do this work without these people.</p></div>
+          <div class="sb-lists">
+            <div><h3 class="lab">Venues</h3><ul><li>Ventilator Cinema</li><li>OT301</li><li>Café Saarein</li><li>Filmhuis Cavia</li><li>Murmur</li><li>Radio Radio</li><li>dubble</li></ul></div>
+            <div><h3 class="lab">Collectives</h3><ul><li>Queer Cinema for Palestine</li><li>BDS Nederland</li><li>Free Palestine NL</li><li>RepresentAsian</li><li>Asian Pride NL</li><li>LibRafi</li><li>Rasa Amsterdam</li><li>Palestina Coalitie</li></ul></div>
+            <div><h3 class="lab">In support of</h3><ul><li>Haven for Artists</li><li>Funds for Gaza</li><li>alQaws</li><li>Mayli Library</li><li>The Great Oven</li><li>Cairde Palestine Belfast</li><li>Palestine Action</li><li>We Are Queer gym</li><li>De Regenboog Groep</li><li>TechMed Gaza</li><li>Saida Initiative</li></ul></div>
+            <div><h3 class="lab">Collaborators and facilitators</h3><ul><li>Fiona Kirk</li><li>Leah Downing</li><li>Eric Stynes</li><li>Louise Lap</li></ul></div>
+          </div>
+        </section>
+        <section class="sb-sec" id="sec-funders" aria-labelledby="funders-h">
+          <div><h2 class="lab" id="funders-h" tabindex="-1">For funders</h2><p>Bloemstraat puts on small, open events that bring people together and raise money for groups doing the work.</p></div>
+          <dl class="sb-nums" id="sb-nums"></dl>
+          <dl class="sb-indent sb-qa">
+            <div><dt class="lab">How it works:</dt><dd>Each event is about one cause and raises money for a group working on it. Most are pay what you can, so no one is kept out.</dd></div>
+            <div><dt class="lab">What funding pays for:</dt><dd>Venue hire, fees for artists and speakers, and access, such as subtitles and step-free venues.</dd></div>
+            <div><dt class="lab">Talk to us:</dt><dd>Send us a message and we’ll send you a short summary of our work: past events, who came and what they raised.</dd></div>
+          </dl>
+        </section>
+        <section class="sb-sec" id="sec-access" aria-labelledby="access-h">
+          <div><h2 class="lab" id="access-h" tabindex="-1">Access</h2><p>We want everyone to be able to come. If something would stop you, tell us and we’ll do what we can.</p></div>
+          <dl class="sb-indent sb-qa">
+            <div><dt class="lab">At events:</dt><dd>Each event page says what we know about the venue: step-free entry, seating, toilets, and whether films have subtitles.</dd></div>
+            <div><dt class="lab">Paying:</dt><dd>Most events are pay what you can. If you can’t pay, message us and come anyway.</dd></div>
+            <div><dt class="lab">On this website:</dt><dd>It works with a keyboard and a screen reader. Moving pictures stop if your device is set to reduce motion, and you can pause them on the home page.</dd></div>
+            <div><dt class="lab">Tell us:</dt><dd>If something here or at an event doesn’t work for you, message us and we’ll fix what we can.</dd></div>
+          </dl>
+        </section>
+        <section class="sb-sec" id="sec-contact" aria-labelledby="contact-h">
+          <div><h2 class="lab" id="contact-h" tabindex="-1">Contact</h2><p>The quickest way to reach us is a message on Instagram. Tell us a little about who you are and what you have in mind.</p></div>
+          <dl class="sb-indent sb-qa">
+            <div><dt class="lab">Instagram:</dt><dd><a class="lk" href="https://www.instagram.com/bloemstraat/">@bloemstraat<span class="i ar" aria-hidden="true">→</span></a></dd></div>
+            <div><dt class="lab">Email:</dt><dd>Address to come</dd></div>
+            <div><dt class="lab">Hear about the next event:</dt><dd>
+              <form class="field-pill" id="signup2" novalidate>
+                <label class="sr" for="signup2-email">Your email</label>
+                <input id="signup2-email" type="email" autocomplete="email" placeholder="Your email">
+                <button class="send" type="submit" aria-label="Sign up"><span class="i ar" aria-hidden="true">→</span></button>
+              </form>
+              <p class="status mono quiet" id="signup2-status" role="status"></p></dd></div>
+          </dl>
+        </section>
       </div>
     </div>
   </section>
@@ -556,22 +633,22 @@ form.host textarea::placeholder { color: var(--quiet); opacity: 1; }
 (function () {
   document.documentElement.classList.add('js');
   var EVENTS = [
-    { slug: 'liberatory-sounds', date: '21 Nov 2026', title: 'Liberatory Sounds', series: 'Liberatory Sounds', support: 'Free event', line: 'Free, with LibRafi’s library', when: 'Sat 21 Nov 2026, 12:00–17:00', where: 'dubble, Amsterdam', door: 'Free, no ticket needed', withWho: 'LibRafi and dubble',
+    { slug: 'liberatory-sounds', kinds: ['music'], access: 'Details to come. Tell us if you need anything to take part.',  date: '21 Nov 2026', title: 'Liberatory Sounds', series: 'Liberatory Sounds', support: 'Free event', line: 'Free, with LibRafi’s library', when: 'Sat 21 Nov 2026, 12:00–17:00', where: 'dubble, Amsterdam', door: 'Free, no ticket needed', withWho: 'LibRafi and dubble',
       text: ['Five music lovers play what liberation means to them. Drop in for an hour or stay the whole afternoon.', 'Reflect, chat and browse books from LibRafi’s decolonial nomadic library.'],
       lineup: [['12:00', 'Fiona Kirk'], ['13:00', 'Cathy Grogan'], ['14:00', 'Deboleena'], ['15:00', 'Mo Rights'], ['16:00', 'Karmel Sabri']] },
-    { slug: 'a-listening-journey', date: '8 Oct 2026', title: 'A Listening Journey', series: 'Bloemstraat presents', support: 'To confirm', line: 'In support of: to confirm', where: 'Radio Radio, Amsterdam', text: ['A lecture, a listening session and a DJ set with Hiba Salameh, tracing Palestinian music from the 1920s to now.'] },
-    { slug: 'open-table', date: '18 Apr 2026', title: 'Open Table', series: 'Bloemstraat presents', support: 'Saida Initiative', line: 'In support of Saida Initiative', where: 'OT301 and Ventilator Cinema, Amsterdam', text: ['A screening of Buffer Zone, a mezze dinner and a market.'] },
-    { slug: 'the-things-we-dont-say', date: '4 Feb 2026', title: 'The Things We Don’t Say and Rendered in Light', series: 'Bloemstraat presents', support: 'TechMed Gaza', line: 'In support of TechMed Gaza', where: 'Ventilator Cinema, Amsterdam', text: ['Two short films, and a Q&A with directors Ornella Mutoni and Maria Marrone.'] },
-    { slug: 'representasian', date: '7 Dec 2025', title: 'RepresentAsian × Bloemstraat', series: 'Bloemstraat with…', support: 'De Regenboog Groep', line: 'In support of De Regenboog Groep', where: 'Murmur, Amsterdam', text: ['Short films, a panel, food and music, with RepresentAsian and Asian Pride NL.'] },
-    { slug: 'pub-quiz-2', date: '30 Jul 2025', title: 'Pub Quiz #2', series: 'Bloemstraat presents', support: 'LGBT asylum support', line: 'Fundraiser for LGBT asylum support', where: 'Café Saarein, Amsterdam', text: ['A queer-themed pub quiz. Pay what you can.'] },
-    { slug: 'no-pride-in-genocide', date: '6 Jun 2025', title: 'No Pride in Genocide', series: 'Liberatory Visions', support: 'The filmmakers', line: 'In support of the filmmakers', where: 'Ventilator Cinema, Amsterdam', text: ['Short films by queer, Palestinian and allied artists, with Queer Cinema for Palestine.'] },
-    { slug: 'pub-quiz', date: '26 Mar 2025', title: 'Pub Quiz', series: 'Bloemstraat presents', support: 'We Are Queer gym', line: 'In support of We Are Queer gym', where: 'Café Saarein, Amsterdam', text: ['A queer-themed pub quiz. Pay what you can.'] },
-    { slug: 'ireland-let-the-people-sing', date: '14 Mar 2025', title: 'Ireland: Let the People Sing', series: 'Liberatory Visions', support: 'Cairde Palestine Belfast and Palestine Action', line: 'In support of Cairde Palestine Belfast and Palestine Action', where: 'Ventilator Cinema, Amsterdam', text: ['A screening of The Ban, a talk on media and censorship, Irish music and an art market.'] },
-    { slug: 'lebanon-a-piece-of-sky', date: '17 Jan 2025', title: 'Lebanon, A Piece of Sky', series: 'Liberatory Visions', support: 'Mayli Library and The Great Oven', line: 'In support of Mayli Library and The Great Oven', where: 'Ventilator Cinema, Amsterdam', text: ['Two films by Lebanese filmmakers that look to the skies above Beirut.'] },
-    { slug: 'queer-voices', date: '25 Sep 2024', title: 'Queer Voices for a Liberated Palestine', series: 'Liberatory Visions', support: 'alQaws', line: 'In support of alQaws', where: 'Ventilator Cinema, Amsterdam', text: ['Five short films by queer filmmakers from Palestine and Lebanon.'] },
-    { slug: 'where-olive-trees-weep', date: '26 Jun 2024', title: 'Where Olive Trees Weep', series: 'Bloemstraat presents', support: 'To confirm', line: 'In support of: to confirm', where: 'Filmhuis Cavia, Amsterdam', text: ['A solidarity screening of the documentary Where Olive Trees Weep.'] },
-    { slug: 'united-by-music', date: '11 May 2024', title: 'United by Music (for a Free Palestine)', series: 'Bloemstraat presents', support: 'Funds for Gaza', line: 'In support of Funds for Gaza', where: 'Ventilator Cinema, Amsterdam', text: ['Short films, a talk on cultural boycott and a community dinner, on the night of Eurovision.'] },
-    { slug: 'raffle-for-beirut', date: '30 Aug 2020', title: 'Raffle for Beirut', series: 'Bloemstraat presents', support: 'Haven for Artists', line: 'In support of Haven for Artists', where: 'Online', text: ['A raffle of friends’ work after the Beirut port explosion. €2,465 raised.'] }
+    { slug: 'a-listening-journey', kinds: ['music', 'talks'],  date: '8 Oct 2026', title: 'A Listening Journey', series: 'Bloemstraat presents', support: 'To confirm', line: 'In support of: to confirm', where: 'Radio Radio, Amsterdam', text: ['A lecture, a listening session and a DJ set with Hiba Salameh, tracing Palestinian music from the 1920s to now.'] },
+    { slug: 'open-table', kinds: ['film', 'food'], groups: ['Saida Initiative'],  date: '18 Apr 2026', title: 'Open Table', series: 'Bloemstraat presents', support: 'Saida Initiative', line: 'In support of Saida Initiative', where: 'OT301 and Ventilator Cinema, Amsterdam', text: ['A screening of Buffer Zone, a mezze dinner and a market.'] },
+    { slug: 'the-things-we-dont-say', kinds: ['film', 'talks'], groups: ['TechMed Gaza'],  date: '4 Feb 2026', title: 'The Things We Don’t Say and Rendered in Light', series: 'Bloemstraat presents', support: 'TechMed Gaza', line: 'In support of TechMed Gaza', where: 'Ventilator Cinema, Amsterdam', text: ['Two short films, and a Q&A with directors Ornella Mutoni and Maria Marrone.'] },
+    { slug: 'representasian', kinds: ['film', 'talks', 'food', 'music'], groups: ['De Regenboog Groep'],  date: '7 Dec 2025', title: 'RepresentAsian × Bloemstraat', series: 'Bloemstraat with…', support: 'De Regenboog Groep', line: 'In support of De Regenboog Groep', where: 'Murmur, Amsterdam', text: ['Short films, a panel, food and music, with RepresentAsian and Asian Pride NL.'] },
+    { slug: 'pub-quiz-2', kinds: ['quizzes'],  date: '30 Jul 2025', title: 'Pub Quiz #2', series: 'Bloemstraat presents', support: 'LGBT asylum support', line: 'Fundraiser for LGBT asylum support', where: 'Café Saarein, Amsterdam', text: ['A queer-themed pub quiz. Pay what you can.'] },
+    { slug: 'no-pride-in-genocide', kinds: ['film'],  date: '6 Jun 2025', title: 'No Pride in Genocide', series: 'Liberatory Visions', support: 'The filmmakers', line: 'In support of the filmmakers', where: 'Ventilator Cinema, Amsterdam', text: ['Short films by queer, Palestinian and allied artists, with Queer Cinema for Palestine.'] },
+    { slug: 'pub-quiz', kinds: ['quizzes'], groups: ['We Are Queer gym'],  date: '26 Mar 2025', title: 'Pub Quiz', series: 'Bloemstraat presents', support: 'We Are Queer gym', line: 'In support of We Are Queer gym', where: 'Café Saarein, Amsterdam', text: ['A queer-themed pub quiz. Pay what you can.'] },
+    { slug: 'ireland-let-the-people-sing', kinds: ['film', 'talks', 'music'], groups: ['Cairde Palestine Belfast', 'Palestine Action'],  date: '14 Mar 2025', title: 'Ireland: Let the People Sing', series: 'Liberatory Visions', support: 'Cairde Palestine Belfast and Palestine Action', line: 'In support of Cairde Palestine Belfast and Palestine Action', where: 'Ventilator Cinema, Amsterdam', text: ['A screening of The Ban, a talk on media and censorship, Irish music and an art market.'] },
+    { slug: 'lebanon-a-piece-of-sky', kinds: ['film'], groups: ['Mayli Library', 'The Great Oven'],  date: '17 Jan 2025', title: 'Lebanon, A Piece of Sky', series: 'Liberatory Visions', support: 'Mayli Library and The Great Oven', line: 'In support of Mayli Library and The Great Oven', where: 'Ventilator Cinema, Amsterdam', text: ['Two films by Lebanese filmmakers that look to the skies above Beirut.'] },
+    { slug: 'queer-voices', kinds: ['film'], groups: ['alQaws'],  date: '25 Sep 2024', title: 'Queer Voices for a Liberated Palestine', series: 'Liberatory Visions', support: 'alQaws', line: 'In support of alQaws', where: 'Ventilator Cinema, Amsterdam', text: ['Five short films by queer filmmakers from Palestine and Lebanon.'] },
+    { slug: 'where-olive-trees-weep', kinds: ['film'],  date: '26 Jun 2024', title: 'Where Olive Trees Weep', series: 'Bloemstraat presents', support: 'To confirm', line: 'In support of: to confirm', where: 'Filmhuis Cavia, Amsterdam', text: ['A solidarity screening of the documentary Where Olive Trees Weep.'] },
+    { slug: 'united-by-music', kinds: ['film', 'talks', 'food'], groups: ['Funds for Gaza'],  date: '11 May 2024', title: 'United by Music (for a Free Palestine)', series: 'Bloemstraat presents', support: 'Funds for Gaza', line: 'In support of Funds for Gaza', where: 'Ventilator Cinema, Amsterdam', text: ['Short films, a talk on cultural boycott and a community dinner, on the night of Eurovision.'] },
+    { slug: 'raffle-for-beirut', kinds: [], groups: ['Haven for Artists'],  date: '30 Aug 2020', title: 'Raffle for Beirut', series: 'Bloemstraat presents', support: 'Haven for Artists', line: 'In support of Haven for Artists', where: 'Online', text: ['A raffle of friends’ work after the Beirut port explosion. €2,465 raised.'] }
   ];
   var MAIN = ['Liberatory Visions', 'Liberatory Sounds', 'Bloemstraat presents', 'Bloemstraat with…'];
   var FILTERS = ['All'].concat(MAIN);
@@ -580,6 +657,7 @@ form.host textarea::placeholder { color: var(--quiet); opacity: 1; }
     ['Who is behind it?', 'A community of venues, collectives, collaborators and facilitators. They are all named on the About page.'],
     ['Where does the money go?', 'When an event raises money, it goes to a named group. You can see which on each event, under “In support of”.'],
     ['What if I can’t afford a ticket?', 'Message us and come anyway. Most events are pay what you can.'],
+    ['Are the events accessible?', 'Each event page says what we know about the venue, such as step-free entry and subtitles. If you need something to take part, tell us and we’ll do what we can.'],
     ['Can I host an event with Bloemstraat?', 'Yes. If it has to do with freedom, resistance or liberation, we can help you put it on. Tell us your idea on the Get involved page.'],
     ['Where and when do events happen?', 'In venues across Amsterdam, such as Ventilator Cinema, OT301 and Café Saarein, a few times a year.']
   ];
@@ -600,6 +678,17 @@ form.host textarea::placeholder { color: var(--quiet); opacity: 1; }
 
   // home
   $('past').innerHTML = EVENTS.slice(1, 9).map(tile).join('');
+  var GIVEN = []; EVENTS.forEach(function (e) { (e.groups || []).forEach(function (g) { GIVEN.push({ name: g, e: e }); }); });
+  $('given').innerHTML = GIVEN.map(function (g, i) {
+    return '<li><a href="#' + g.e.slug + '" data-lab="' + esc(g.e.title) + ' / ' + esc(g.e.date) + '">' + esc(g.name) + '</a>' + (i < GIVEN.length - 1 ? '<span class="sep" aria-hidden="true"> /</span>' : '') + '</li>';
+  }).join(' ');
+  $('given-count').textContent = GIVEN.length + ' groups since 2020';
+
+  // photo strip: anyone can stop it moving
+  $('strip-pause').addEventListener('click', function () {
+    var st = document.querySelector('.strip'), on = !st.classList.contains('paused');
+    st.classList.toggle('paused', on); $('strip-pause-t').textContent = on ? 'Play' : 'Pause';
+  });
   $('questions').innerHTML = QUESTIONS.map(function (q, i) {
     return '<div class="q"><h3><button type="button" aria-expanded="false" aria-controls="a' + i + '" id="q' + i + '"><span>' + esc(q[0]) + '</span><i class="plus" aria-hidden="true"></i></button></h3>' +
       '<div class="a" id="a' + i + '" role="region" aria-labelledby="q' + i + '"><div><p>' + esc(q[1]) + '</p></div></div></div>';
@@ -614,20 +703,24 @@ form.host textarea::placeholder { color: var(--quiet); opacity: 1; }
   $('past-next').addEventListener('click', function () { nudge('past', 1); });
 
   // events: pictures or list, filtered by series
-  var state = { filter: 'All', list: false, view: 'home' };
+  var state = { filter: 'All', kind: null, list: false, view: 'home' };
+  function shownEvents() { return EVENTS.filter(function (e) { return (state.filter === 'All' || groupOf(e) === state.filter) && (!state.kind || (e.kinds || []).indexOf(state.kind) > -1); }); }
   function renderEvents() {
-    var shown = EVENTS.filter(function (e) { return state.filter === 'All' || groupOf(e) === state.filter; });
+    var shown = shownEvents();
     $('events-grid').innerHTML = shown.map(tile).join('');
     $('events-rows').innerHTML = shown.map(function (e) {
       return '<li><a href="#' + e.slug + '" data-lab="' + (NAMED.indexOf(e.series) > -1 ? esc(e.series) + ' / ' : '') + esc(e.date) + '"><span class="mono">' + esc(e.date) + '</span><span class="ev">' + esc(e.title) + ARROW + '</span><span class="mono">' + (MAIN.indexOf(e.series) > -1 ? '<span class="sr">Series: </span>' + esc(e.series) : '') + '</span><span class="mono"><span class="sr">In support of: </span>' + esc(e.support) + '</span></a></li>';
     }).join('');
     $('events-grid').hidden = state.list; $('events-list').hidden = !state.list;
-    $('events-count').textContent = shown.length + (shown.length === 1 ? ' event' : ' events') + ', newest first';
-    $('series-links').innerHTML = FILTERS.slice(1).map(function (f) { return '<button class="chipb" type="button" data-filter="' + esc(f) + '" aria-pressed="' + (f === state.filter) + '">' + esc(f) + '</button>'; }).join('');
+    var any = state.kind || state.filter !== 'All';
+    $('events-count').textContent = shown.length ? shown.length + (shown.length === 1 ? ' event' : ' events') + (state.kind ? ' with ' + state.kind : '') + (state.filter !== 'All' ? ' in ' + state.filter : '') + ', newest first' : 'Nothing like that yet';
+    $('events-reset').hidden = !any;
+    Array.prototype.forEach.call(document.querySelectorAll('#events-h .kind'), function (b) { b.setAttribute('aria-pressed', String(b.getAttribute('data-kind') === state.kind)); });
+    $('events-h').classList.toggle('picked', !!state.kind);
     renderDock();
   }
-  function setFilter(f) { state.filter = (f === state.filter && f !== 'All') ? 'All' : f; renderEvents(); }
-  $('series-links').addEventListener('click', function (ev) { var b = ev.target.closest('button'); if (b) setFilter(b.getAttribute('data-filter')); });
+  $('events-h').addEventListener('click', function (ev) { var b = ev.target.closest('.kind'); if (!b) return; var k = b.getAttribute('data-kind'); state.kind = state.kind === k ? null : k; renderEvents(); });
+  $('events-reset').addEventListener('click', function () { state.kind = null; state.filter = 'All'; renderEvents(); $('events-h').focus({ preventScroll: true }); });
 
   // dock: series buttons on home, glass bar with filters on events
   function renderDock() {
@@ -639,31 +732,35 @@ form.host textarea::placeholder { color: var(--quiet); opacity: 1; }
       d.className = 'dock bar'; d.hidden = false;
       d.innerHTML = '<div class="seg" role="group" aria-label="How to show the events"><button type="button" data-list="0" aria-pressed="' + !state.list + '">Pictures</button><button type="button" data-list="1" aria-pressed="' + state.list + '">List</button></div>' +
         '<div class="group" role="group" aria-label="Show one series">' + FILTERS.map(function (f) { return '<button class="chipb" type="button" data-filter="' + esc(f) + '" aria-pressed="' + (f === state.filter) + '">' + esc(f) + '</button>'; }).join('') + '</div>' +
-        '<span class="count mono quiet">' + EVENTS.filter(function (e) { return state.filter === 'All' || groupOf(e) === state.filter; }).length + ' shown</span>';
+        '<span class="count mono quiet">' + shownEvents().length + ' shown</span>';
     } else { d.hidden = true; d.innerHTML = ''; }
   }
   $('dock').addEventListener('click', function (ev) {
     var b = ev.target.closest('button'); if (!b) return;
-    if (b.hasAttribute('data-jump')) { state.filter = b.getAttribute('data-jump'); renderEvents(); location.hash = 'events'; return; }
+    if (b.hasAttribute('data-jump')) { state.filter = b.getAttribute('data-jump'); state.kind = null; renderEvents(); location.hash = 'events'; return; }
     if (b.hasAttribute('data-list')) { state.list = b.getAttribute('data-list') === '1'; renderEvents(); return; }
     if (b.hasAttribute('data-filter')) { var f = b.getAttribute('data-filter'); state.filter = f; renderEvents(); }
   });
 
   $('foot-tags').innerHTML = FILTERS.slice(1).map(function (f) { return '<button class="chipb" type="button" data-jump="' + esc(f) + '">' + esc(f) + '</button>'; }).join('');
-  $('foot-tags').addEventListener('click', function (ev) { var b = ev.target.closest('button'); if (!b) return; state.filter = b.getAttribute('data-jump'); renderEvents(); if (state.view === 'events') { window.scrollTo({ top: 0, behavior: 'instant' }); } else { location.hash = 'events'; } });
+  $('foot-tags').addEventListener('click', function (ev) { var b = ev.target.closest('button'); if (!b) return; state.filter = b.getAttribute('data-jump'); state.kind = null; renderEvents(); if (state.view === 'events') { window.scrollTo({ top: 0, behavior: 'instant' }); } else { location.hash = 'events'; } });
   if ('IntersectionObserver' in window) new IntersectionObserver(function (en) { document.body.classList.toggle('foot-in', en[0].isIntersecting); }).observe($('foot'));
 
   // list rows: a picture follows the pointer
   var peek = $('peek'), px = 0, py = 0, tx = 0, ty = 0, raf = 0;
   function loop() { px += (tx - px) * 0.18; py += (ty - py) * 0.18; peek.style.transform = 'translate(' + px + 'px,' + py + 'px)'; raf = peek.classList.contains('on') ? requestAnimationFrame(loop) : 0; }
-  $('events-rows').addEventListener('mousemove', function (ev) {
-    var a = ev.target.closest('a'); if (!a || reduce) return;
-    tx = Math.min(ev.clientX + 28, window.innerWidth - 240); ty = Math.max(ev.clientY - 150, 70);
-    if (!peek.classList.contains('on')) { px = tx; py = ty; peek.classList.add('on'); }
-    $('peek-lab').textContent = a.getAttribute('data-lab');
-    if (!raf) raf = requestAnimationFrame(loop);
-  });
-  $('events-rows').addEventListener('mouseleave', function () { peek.classList.remove('on'); });
+  function peekOn(box) {
+    box.addEventListener('mousemove', function (ev) {
+      if (reduce) return;
+      var a = ev.target.closest('a'); if (!a) { peek.classList.remove('on'); return; }
+      tx = Math.min(ev.clientX + 28, window.innerWidth - 240); ty = Math.max(ev.clientY - 150, 70);
+      if (!peek.classList.contains('on')) { px = tx; py = ty; peek.classList.add('on'); }
+      $('peek-lab').textContent = a.getAttribute('data-lab');
+      if (!raf) raf = requestAnimationFrame(loop);
+    });
+    box.addEventListener('mouseleave', function () { peek.classList.remove('on'); });
+  }
+  peekOn($('events-rows')); peekOn($('given'));
 
   // one event
   function renderEvent(e) {
@@ -672,6 +769,7 @@ form.host textarea::placeholder { color: var(--quiet); opacity: 1; }
     $('ev-text').innerHTML = e.text.map(function (t) { return '<p>' + esc(t) + '</p>'; }).join('');
     var rows = [['When', e.when || e.date], ['Where', e.where]];
     if (e.door) rows.push(['Entry', e.door]);
+    if (e.access) rows.push(['Access', e.access]);
     rows.push([e.door ? 'With' : 'In support of', e.door ? e.withWho : e.support]);
     (e.lineup || []).forEach(function (l) { rows.push(l); });
     $('ev-rows').innerHTML = rows.map(function (r) { return '<div><dt class="mono quiet">' + esc(r[0]) + '</dt><dd>' + esc(r[1]) + '</dd></div>'; }).join('');
@@ -681,7 +779,7 @@ form.host textarea::placeholder { color: var(--quiet); opacity: 1; }
   $('ev-cal').addEventListener('click', function () { $('ev-status').textContent = 'Not wired up in this mockup.'; });
 
   // forms: nothing is sent from a mockup
-  [['signup', 'signup-status']].forEach(function (p) {
+  [['signup', 'signup-status'], ['signup2', 'signup2-status']].forEach(function (p) {
     $(p[0]).addEventListener('submit', function (ev) { ev.preventDefault(); $(p[1]).textContent = 'This is a mockup, so nothing was sent.'; });
   });
 
@@ -692,6 +790,7 @@ form.host textarea::placeholder { color: var(--quiet); opacity: 1; }
     if (open) { panel.hidden = false; menu.style.setProperty('--h', panel.offsetHeight + 'px'); requestAnimationFrame(function () { menu.classList.add('open'); }); }
     else { menu.classList.remove('open'); closeTimer = setTimeout(function () { panel.hidden = true; }, 560); }
     btn.setAttribute('aria-expanded', String(open));
+    document.body.classList.toggle('menu-open', open);
   }
   btn.addEventListener('click', function () { setMenu(!menu.classList.contains('open')); });
   document.addEventListener('click', function (ev) { if (!ev.target.closest('#menu') && menu.classList.contains('open')) setMenu(false); });
@@ -734,15 +833,41 @@ form.host textarea::placeholder { color: var(--quiet); opacity: 1; }
     if (!first) { var f = $(focusId); if (f) f.focus({ preventScroll: true }); }
     first = false;
   }
-  var sheetWrap = $('about-sheet'), sheetOpen = false, lastHash = 'home', sheetTimer = 0, sheetFrom = null;
-  function openSheet() {
+  var sheetWrap = $('about-sheet'), sheetEl = $('sheet'), sheetOpen = false, lastHash = 'home', sheetTimer = 0, sheetFrom = null;
+  var SECS = { about: ['sec-about', 'about-h'], funders: ['sec-funders', 'funders-h'], access: ['sec-access', 'access-h'], contact: ['sec-contact', 'contact-h'] };
+  // numbers for funders, counted from the events and the lists on this page
+  (function () {
+    var lists = document.querySelectorAll('.sb-lists ul');
+    var nums = [[EVENTS.length, 'Events since 2020'], [GIVEN.length, 'Groups supported'], [lists[0].children.length, 'Venues in Amsterdam'], [lists[1].children.length, 'Collectives worked with']];
+    $('sb-nums').innerHTML = nums.map(function (n) { return '<div><dt class="lab">' + n[1] + '</dt><dd>' + n[0] + '</dd></div>'; }).join('');
+  })();
+  function spy() {
+    var cur = 'about';
+    ['about', 'funders', 'access', 'contact'].forEach(function (k) { if ($(SECS[k][0]).offsetTop - 160 <= sheetEl.scrollTop) cur = k; });
+    if (sheetEl.scrollTop + sheetEl.clientHeight >= sheetEl.scrollHeight - 4) cur = 'contact';
+    if (cur === 'funders') cur = 'about';
+    Array.prototype.forEach.call(sheetWrap.querySelectorAll('[data-sec]'), function (a) { if (a.getAttribute('data-sec') === cur) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current'); });
+  }
+  sheetEl.addEventListener('scroll', spy, { passive: true });
+  function goSec(sec, smooth) {
+    var top = sec === 'about' ? 0 : $(SECS[sec][0]).offsetTop - 88;
+    sheetEl.scrollTo({ top: top, behavior: smooth && !reduce ? 'smooth' : 'instant' });
+    $(SECS[sec][1]).focus({ preventScroll: true }); spy();
+  }
+  function openSheet(sec) {
+    if (sheetOpen) return goSec(sec, true);
     clearTimeout(sheetTimer); if (menu.classList.contains('open')) setMenu(false);
     sheetFrom = document.activeElement; sheetOpen = true; sheetWrap.hidden = false;
     Array.prototype.forEach.call(sheetWrap.querySelectorAll('[data-close]'), function (a) { a.setAttribute('href', '#' + lastHash); });
     document.documentElement.style.overflow = 'hidden';
     requestAnimationFrame(function () { requestAnimationFrame(function () { sheetWrap.classList.add('open'); }); });
-    $('about-h').focus({ preventScroll: true });
+    goSec(sec, false);
   }
+  // a link to the section already in the address bar still moves the sheet there
+  document.addEventListener('click', function (ev) {
+    var a = ev.target.closest('a[href^="#"]'); if (!a || !sheetOpen) return;
+    var k = a.getAttribute('href').slice(1); if (SECS[k] && location.hash === '#' + k) { ev.preventDefault(); goSec(k, true); }
+  });
   function closeSheet() {
     sheetOpen = false; sheetWrap.classList.remove('open'); document.documentElement.style.overflow = '';
     sheetTimer = setTimeout(function () { sheetWrap.hidden = true; }, 600);
@@ -751,7 +876,7 @@ form.host textarea::placeholder { color: var(--quiet); opacity: 1; }
   document.addEventListener('keydown', function (ev) { if (ev.key === 'Escape' && sheetOpen) location.hash = lastHash; });
   function route() {
     var h = (location.hash || '').replace(/^#/, '');
-    if (h === 'about') { if (first) show('home', 'home-h'); return openSheet(); }
+    if (SECS[h]) { if (first) show('home', 'home-h'); return openSheet(h); }
     // leaving About for the page underneath just closes the sheet, so that page keeps its place
     if (sheetOpen && (h || 'home') === lastHash) { closeSheet(); return; }
     if (sheetOpen) closeSheet();
@@ -783,9 +908,32 @@ form.host textarea::placeholder { color: var(--quiet); opacity: 1; }
     markEl.style.transform = 'translate(' + x.toFixed(2) + 'px,' + y.toFixed(2) + 'px) scale(' + (w / 1200).toFixed(5) + ')';
     document.body.style.setProperty('--pill-o', d < 0.5 ? 1 : 0);
     document.body.classList.toggle('docked', d < 0.5);
-    document.body.classList.toggle('dock-in', opening.getBoundingClientRect().bottom < vh - 64);
+    document.body.classList.toggle('dock-in', s > H * 0.6 && opening.getBoundingClientRect().bottom < vh - 64);
   }
-  function onScroll() { if (ticking) return; ticking = true; requestAnimationFrame(function () { ticking = false; updateTop(); }); }
+  var letters = Array.prototype.slice.call(markEl.querySelectorAll('path')), centres = null, grown = false;
+  function measure() { if (!centres) centres = letters.map(function (p) { var b = p.getBBox(); return b.x + b.width / 2; }); }
+  function growTo(fn) { letters.forEach(function (p, i) { p.style.transform = 'scaleY(' + fn(i).toFixed(3) + ')'; }); }
+  function settle() { if (!grown) return; grown = false; letters.forEach(function (p) { p.style.transform = ''; }); }
+  heroEl.addEventListener('pointermove', function (ev) {
+    if (reduce || ev.pointerType !== 'mouse' || window.scrollY > 4) return;
+    measure(); grown = true;
+    var r = markEl.getBoundingClientRect(), k = r.width / 1200, hr = heroEl.getBoundingClientRect();
+    var x = (ev.clientX - r.left) / k;
+    var near = 0.4 + 0.6 * Math.min(1, Math.max(0, (ev.clientY - hr.top) / Math.max(1, r.top - hr.top)));
+    growTo(function (i) { var d = (x - centres[i]) / 150; return 1 + 0.26 * near * Math.exp(-d * d); });
+  });
+  heroEl.addEventListener('pointerleave', settle);
+  // on landing, one slow wave across the letters, left to right
+  function wave() {
+    if (reduce || state.view !== 'home' || window.scrollY > 4) return;
+    measure();
+    var order = letters.map(function (p, i) { return i; }).sort(function (a, b) { return centres[a] - centres[b]; });
+    order.forEach(function (li, n) {
+      setTimeout(function () { if (window.scrollY > 4) return; letters[li].style.transform = 'scaleY(1.14)'; }, 300 + n * 70);
+      setTimeout(function () { if (!grown) letters[li].style.transform = ''; }, 300 + n * 70 + 520);
+    });
+  }
+  function onScroll() { if (window.scrollY > 4) settle(); if (ticking) return; ticking = true; requestAnimationFrame(function () { ticking = false; updateTop(); }); }
   window.addEventListener('scroll', onScroll, { passive: true });
   window.addEventListener('resize', onScroll);
 
@@ -794,6 +942,7 @@ form.host textarea::placeholder { color: var(--quiet); opacity: 1; }
   window.addEventListener('hashchange', route);
   renderEvents();
   route();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { setTimeout(wave, 200); }); else setTimeout(wave, 400);
 })();
 </script>
 </body>
