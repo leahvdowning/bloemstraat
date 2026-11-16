@@ -387,12 +387,10 @@ html[data-pics="off"] .ev-pic .lab { position: static; }
 .mailer .status:empty { display: none; }
 
 /* the flower cursor (mouse and trackpad only) */
-.flower { position: fixed; left: 0; top: 0; z-index: 200; width: 30px; height: 30px; margin: -15px 0 0 -15px; pointer-events: none; mix-blend-mode: difference; opacity: 0; transition: opacity 0.2s; will-change: transform; display: none; }
+.flower { position: fixed; left: 0; top: 0; z-index: 200; width: 24px; height: 24px; margin: -12px 0 0 -12px; pointer-events: none; mix-blend-mode: difference; opacity: 0; transition: opacity 0.2s; will-change: transform; display: none; }
 .flower svg { display: block; width: 100%; height: 100%; fill: #fff; transition: transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1); }
 .flower.on { opacity: 1; }
-.flower.big svg { transform: scale(1.8) rotate(36deg); }
-.flower.down svg { transform: scale(0.8); }
-.flower.big.down svg { transform: scale(1.5) rotate(36deg); }
+.flower.down svg { transform: scale(0.85); }
 @media (hover: hover) and (pointer: fine) {
   html[data-cursor="flower"] .flower { display: block; }
   html[data-cursor="flower"], html[data-cursor="flower"] * { cursor: none !important; }
@@ -1378,7 +1376,6 @@ form.host textarea::placeholder { color: var(--quiet); opacity: 1; }
     fx = ev.clientX; fy = ev.clientY; if (!fRaf) fRaf = requestAnimationFrame(placeFlower);
     var t = ev.target.closest ? ev.target : document.body, field = t.closest('input, textarea, select');
     flower.classList.toggle('on', !field);
-    flower.classList.toggle('big', !field && !!t.closest('a[href], button, label, summary, [role="button"]'));
   }, { passive: true });
   document.addEventListener('pointerdown', function () { flower.classList.add('down'); });
   document.addEventListener('pointerup', function () { flower.classList.remove('down'); });
